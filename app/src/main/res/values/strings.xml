@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Seals Market</string>
+    <string name="cat_new">Новинки</string>
+    <string name="cat_jeans">Джинсы</string>
+    <string name="cat_tshorts">Футболки</string>
+    <string name="nav_menu">Меню</string>
+    <string name="nav_cart">Корзина</string>
 </resources>

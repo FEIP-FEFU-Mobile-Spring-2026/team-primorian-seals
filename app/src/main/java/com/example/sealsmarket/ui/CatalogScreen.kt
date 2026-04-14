@@ -4,24 +4,36 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,7 +49,86 @@ class CatalogScreen {
 
 @Composable
 fun Catalog(modifier: Modifier = Modifier){
+    Column(
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.fillMaxSize()) {
+        CategoryPanel(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        )
+        NavigationPanel(
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+    }
+}
+@Composable
+fun CategoryPanel(modifier: Modifier = Modifier){
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = modifier) {
+        //В будущем нужно сделать список категорий, и в цикле для каждой категории создавать кнопку
+        //И поместить все кнопки в LazyRow, чтобы они пролистывались по горизонтали
+        CategoryButton(R.string.cat_new){}
+        CategoryButton(R.string.cat_jeans){}
+        CategoryButton(R.string.cat_tshorts){}
+    }
+}
 
+@Composable
+fun NavigationPanel(modifier: Modifier = Modifier){
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = modifier
+    ){
+        NavButton(Icons.Filled.Menu, R.string.nav_menu) { }
+        Spacer(modifier = Modifier.width(64.dp))
+        NavButton(Icons.Filled.ShoppingCart, R.string.nav_cart) { }
+    }
+}
+
+@Composable
+fun NavButton(
+    image: ImageVector,
+    textId: Int,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+){
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier){
+        IconButton(
+            onClick = onClick,
+            modifier = Modifier
+                .size(32.dp)
+        ) {
+            Icon(
+                imageVector = image,
+                contentDescription = null,
+
+            )
+        }
+        Text(
+            text = stringResource(textId),
+            style = MaterialTheme.typography.labelSmall)
+    }
+}
+@Composable
+fun CategoryButton(
+    catName: Int,
+    modifier: Modifier = Modifier,
+    onClick: ()->Unit)
+{
+    Button(
+        modifier = modifier.padding(horizontal = 2.dp),
+        onClick = {},
+        ) {
+        Text(text = stringResource(catName))
+    }
 }
 
 @Composable
@@ -98,16 +189,18 @@ fun ItemCard(
     }
 }
 
-//@Composable
-//@Preview
-//fun CatalogPreview(){
-//        SealsMarketTheme() {
-//            Scaffold(
-//                modifier = Modifier.fillMaxSize()){ innerPadding ->
-//                Catalog(modifier = Modifier.padding((innerPadding)))
-//            }
-//        }
-//}
+@Composable
+@Preview
+fun CatalogPreview(){
+        SealsMarketTheme() {
+            Scaffold(
+                modifier = Modifier.fillMaxSize()){ innerPadding ->
+                Catalog(modifier = Modifier
+                    .padding((innerPadding))
+                )
+            }
+        }
+}
 
 @Composable
 @Preview
