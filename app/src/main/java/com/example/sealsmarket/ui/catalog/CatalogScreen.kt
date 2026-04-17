@@ -32,7 +32,6 @@ import com.example.sealsmarket.model.empty_list
 import com.example.sealsmarket.ui.NavigationPanel
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
-class CatalogScreen {
     @Composable
     fun Catalog(modifier: Modifier = Modifier) {
         Column(
@@ -69,8 +68,6 @@ class CatalogScreen {
     }
 
 
-
-
     @Composable
     fun CategoryButton(
         catName: Int,
@@ -92,7 +89,6 @@ class CatalogScreen {
                 ItemCardContent(item)
             }
         }
-        //Список товаров
     }
 
     @Composable
@@ -101,7 +97,7 @@ class CatalogScreen {
         SealsMarketTheme() {
             Scaffold(
                 bottomBar = {
-                    NavigationPanel() },
+                    NavigationPanel({},{}) },
                 modifier = Modifier.fillMaxSize()
             ) { innerPadding ->
                 Catalog(
@@ -111,14 +107,3 @@ class CatalogScreen {
             }
         }
     }
-
-//@Composable
-//@Preview
-//fun CardPreview(){
-//    SealsMarketTheme() {
-//            ItemCard(
-//                item = emptyItem
-//                )
-//    }
-//}
-}

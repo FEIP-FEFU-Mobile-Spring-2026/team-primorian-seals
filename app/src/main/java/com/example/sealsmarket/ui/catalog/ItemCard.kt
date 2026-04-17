@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,22 +19,24 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.sealsmarket.R
 import com.example.sealsmarket.model.Item
-    @Composable
+import com.example.sealsmarket.model.emptyItem
+import com.example.sealsmarket.ui.theme.SealsMarketTheme
+
+@Composable
     fun ItemCardContent(
         item: Item,
         modifier: Modifier = Modifier,
         placeHolder: Painter = painterResource(R.drawable.empty),
     ) {
         Card(
-            colors = CardColors(
+            colors = CardDefaults.cardColors(
                 containerColor = Color.White,
-                contentColor = Color.DarkGray,
-                disabledContainerColor = Color.White,
-                disabledContentColor = Color.White
+                contentColor = Color.DarkGray
             ),
             modifier = modifier
         ) {
@@ -77,3 +80,14 @@ import com.example.sealsmarket.model.Item
             }
         }
     }
+
+@Composable
+@Preview
+fun CardPreview(){
+    SealsMarketTheme() {
+            ItemCardContent(
+                item = emptyItem
+                )
+    }
+}
+

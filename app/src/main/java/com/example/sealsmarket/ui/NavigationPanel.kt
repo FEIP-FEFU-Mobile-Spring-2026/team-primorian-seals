@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -23,14 +24,19 @@ import androidx.compose.ui.unit.dp
 import com.example.sealsmarket.R
 
 @Composable
-fun NavigationPanel(modifier: Modifier = Modifier) {
+fun NavigationPanel(
+    onCatalogNavigate: () ->Unit,
+    onCartNavigate: ()->Unit,
+    modifier: Modifier = Modifier) {
     Row(
         horizontalArrangement = Arrangement.Center,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .navigationBarsPadding()
     ) {
-        NavButton(Icons.Filled.Menu, R.string.menu) { }
+        NavButton(Icons.Filled.Menu, R.string.menu) { onCatalogNavigate() }
         Spacer(modifier = Modifier.width(64.dp))
-        NavButton(Icons.Filled.ShoppingCart, R.string.cart) { }
+        NavButton(Icons.Filled.ShoppingCart, R.string.cart) { onCartNavigate() }
     }
 }
 

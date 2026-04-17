@@ -34,8 +34,6 @@ import com.example.sealsmarket.R
 import com.example.sealsmarket.ui.NavigationPanel
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
-class CartScreen {
-
     @Composable
     fun Cart(modifier: Modifier = Modifier){
         //Если корзина не пустая, выводить список товаров,
@@ -98,10 +96,9 @@ class CartScreen {
         SealsMarketTheme() {
             Scaffold(
                 topBar = {CartTopBar()},
-                bottomBar = { NavigationPanel() }
+                bottomBar = { NavigationPanel({},{}) }
             ){innerPadding->
                 Cart(modifier = Modifier.padding(innerPadding))
             }
         }
     }
-}
