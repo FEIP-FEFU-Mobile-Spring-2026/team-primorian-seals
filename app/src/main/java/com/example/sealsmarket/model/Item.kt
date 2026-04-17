@@ -33,3 +33,7 @@ val emptyItem =  Item(
 "Всесезон",
 "Турция"
 )
+
+val empty_list = listOf<Item>(
+emptyItem, emptyItem, emptyItem, emptyItem, emptyItem, emptyItem, emptyItem
+)
