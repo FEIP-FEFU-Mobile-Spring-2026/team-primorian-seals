@@ -8,8 +8,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Delete
@@ -44,7 +47,9 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
     @Composable
     fun CartTopBar(modifier: Modifier = Modifier){
         Box(
-            modifier = modifier.fillMaxWidth()
+            modifier = modifier
+                .fillMaxWidth()
+                .statusBarsPadding()
         ) {
             Text(
                 text = stringResource(R.string.cart),

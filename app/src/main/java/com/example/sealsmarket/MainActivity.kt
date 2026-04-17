@@ -14,9 +14,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.sealsmarket.ui.NavigationPanel
 import com.example.sealsmarket.ui.cart.Cart
+import com.example.sealsmarket.ui.cart.CartTopBar
 import com.example.sealsmarket.ui.catalog.Catalog
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
 import kotlinx.serialization.Serializable
@@ -34,7 +36,17 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun App(modifier: Modifier = Modifier) {
         val navController = rememberNavController()
+        val navBackStackEntry = navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry.value?.destination?.route
         Scaffold(
+            topBar = {
+                when (currentRoute) {
+                    "cart" -> { CartTopBar() }
+                    "catalog" -> {
+
+                    }
+                }
+            },
             bottomBar = {
                 NavigationPanel(
                     onCatalogNavigate = { navController.navigate("catalog"){launchSingleTop=true} },
