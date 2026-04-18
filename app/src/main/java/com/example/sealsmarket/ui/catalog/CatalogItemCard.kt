@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -63,17 +62,11 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
                     ).height(150.dp),
                     verticalArrangement = Arrangement.SpaceAround
                 ) {
-                    Text(
-                        text = item.name,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 8.dp)
+                    ItemInfo(
+                        item.name,
+                        item.shortDescription
                     )
-                    Text(
-                        text = item.shortDescription,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
+
                     Button(
                         onClick = {},
                         shape = MaterialTheme.shapes.extraSmall
@@ -86,6 +79,28 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
         }
     }
 
+@Composable
+fun ItemInfo(
+    name:String,
+    shortDescription: String,
+    modifier: Modifier = Modifier){
+    Column(
+        verticalArrangement = Arrangement.SpaceAround,
+        modifier = modifier
+    ) {
+        Text(
+            text = name,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(top= 8.dp, bottom = 4.dp)
+        )
+        Text(
+            text = shortDescription,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+    }
+}
 @Composable
 @Preview
 fun CardPreview(){
