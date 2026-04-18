@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.sealsmarket.navigation.Routes
 import com.example.sealsmarket.ui.NavigationPanel
 import com.example.sealsmarket.ui.cart.Cart
 import com.example.sealsmarket.ui.cart.CartTopBar
@@ -41,29 +42,29 @@ class MainActivity : ComponentActivity() {
         Scaffold(
             topBar = {
                 when (currentRoute) {
-                    "cart" -> { CartTopBar() }
-                    "catalog" -> {
-
+                    Routes.CART -> { CartTopBar() }
+                    Routes.CATALOG -> {
                     }
                 }
             },
             bottomBar = {
                 NavigationPanel(
-                    onCatalogNavigate = { navController.navigate("catalog"){launchSingleTop=true} },
-                    onCartNavigate = { navController.navigate("cart"){launchSingleTop=true} }
+                    onCatalogNavigate = { navController.navigate(Routes.CATALOG){launchSingleTop=true} },
+                    onCartNavigate = { navController.navigate(Routes.CART){launchSingleTop=true} },
+                    curRoute = currentRoute
                 )
             },
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
 
-            NavHost(navController, startDestination = "catalog") {
-                composable("catalog") {
+            NavHost(navController, startDestination = Routes.CATALOG) {
+                composable(Routes.CATALOG) {
                     Catalog(
                         modifier = modifier
                             .padding((innerPadding))
                     )
                 }
-                composable("cart") {
+                composable(Routes.CART) {
                     Cart(
                         modifier = modifier
                             .padding((innerPadding))
