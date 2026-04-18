@@ -2,6 +2,7 @@ package com.example.sealsmarket.ui.catalog
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -60,11 +61,12 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
             horizontalArrangement = Arrangement.Center,
             modifier = modifier
         ) {
-            //По заданию новинки должны отображаться первыми в списке категорий
-            //Этого пока нет
-            LazyRow() {
+            LazyRow(
+            ) {
                 items(ProductsData.GetCategoriesList()){
-                    cat -> CategoryButton(cat.name, onClick={/*Фильтрация*/})
+                    cat -> CategoryButton(
+                    cat.name,
+                    onClick={/*Фильтрация*/})
                 }
             }
         }
@@ -87,9 +89,13 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
     @Composable
     fun Content(modifier: Modifier = Modifier) {
-        LazyColumn(modifier = modifier) {
+        LazyColumn(
+            modifier = modifier) {
             items(ProductsData.GetItemsList()) { item ->
-                ItemCardContent(item)
+                ItemCardContent(
+                    item,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
             }
         }
     }

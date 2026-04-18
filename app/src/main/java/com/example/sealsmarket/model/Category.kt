@@ -7,4 +7,4 @@ data class Category(
     val id: String,
     val name: String
 )
-
+val cat_new = Category(id = "cat_new", name = "Новинки")

@@ -2,6 +2,7 @@ package com.example.sealsmarket.data
 
 import com.example.sealsmarket.model.Category
 import com.example.sealsmarket.model.Item
+import com.example.sealsmarket.model.cat_new
 import com.example.sealsmarket.model.emptyItem
 import kotlinx.serialization.Serializable
 
@@ -18,8 +19,9 @@ data class ProductsContent(
 object ProductsData {
 
     //Функция должна считывать данные из файла. Этот код нужно переделать
+    //Категории "Новинки" в json нет, она пока лежит в Category.kt
     fun GetCategoriesList(): List<Category>{
-        return listOf<Category>(
+        return listOf<Category>(cat_new) + listOf<Category>(
             Category(
                     id = "cat_jeans",
                     name = "Джинсы"

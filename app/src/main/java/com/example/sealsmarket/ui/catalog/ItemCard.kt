@@ -13,6 +13,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -38,16 +39,20 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
                 containerColor = Color.White,
                 contentColor = Color.DarkGray
             ),
+            shape = MaterialTheme.shapes.extraSmall,
             modifier = modifier
         ) {
-            Row() {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 AsyncImage(
                     contentDescription = null,
                     model = item.imageUrl,
                     placeholder = placeHolder,
                     modifier = Modifier
                         .width(150.dp)
-                        .height(150.dp),
+                        .height(150.dp)
+                        .padding(start = 4.dp),
                     contentScale = ContentScale.Crop
                 )
                 Column(
