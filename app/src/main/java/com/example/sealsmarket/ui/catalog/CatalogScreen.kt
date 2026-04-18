@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -28,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sealsmarket.R
 import androidx.compose.foundation.lazy.items
-import com.example.sealsmarket.model.empty_list
+import com.example.sealsmarket.data.ProductsData
 import com.example.sealsmarket.ui.NavigationPanel
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
@@ -59,18 +60,20 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
             horizontalArrangement = Arrangement.Center,
             modifier = modifier
         ) {
-            //В будущем нужно сделать список категорий, и в цикле для каждой категории создавать кнопку
-            //И поместить все кнопки в LazyRow, чтобы они пролистывались по горизонтали
-            CategoryButton(R.string.cat_new) {}
-            CategoryButton(R.string.cat_jeans) {}
-            CategoryButton(R.string.cat_tshorts) {}
+            //По заданию новинки должны отображаться первыми в списке категорий
+            //Этого пока нет
+            LazyRow() {
+                items(ProductsData.GetCategoriesList()){
+                    cat -> CategoryButton(cat.name, onClick={/*Фильтрация*/})
+                }
+            }
         }
     }
 
 
     @Composable
     fun CategoryButton(
-        catName: Int,
+        catName: String,
         modifier: Modifier = Modifier,
         onClick: () -> Unit
     ) {
@@ -78,14 +81,14 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
             modifier = modifier.padding(horizontal = 2.dp),
             onClick = {},
         ) {
-            Text(text = stringResource(catName))
+            Text(text = catName)
         }
     }
 
     @Composable
     fun Content(modifier: Modifier = Modifier) {
         LazyColumn(modifier = modifier) {
-            items(empty_list) { item ->
+            items(ProductsData.GetItemsList()) { item ->
                 ItemCardContent(item)
             }
         }

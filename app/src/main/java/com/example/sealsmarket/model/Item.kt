@@ -34,6 +34,3 @@ val emptyItem =  Item(
 "Турция"
 )
 
-val empty_list = listOf<Item>(
-emptyItem, emptyItem, emptyItem, emptyItem, emptyItem, emptyItem, emptyItem
-)
