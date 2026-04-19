@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -57,49 +58,71 @@ fun CardContent(
         shape = MaterialTheme.shapes.extraSmall,
         modifier = modifier
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            AsyncImage(
-                contentDescription = null,
-                model = item.imageUrl,
-                placeholder = placeHolder,
+        Box()
+        {
+            IconButton(
+                onClick = {/*Удалить товар из корзины*/ },
                 modifier = Modifier
-                    .width(150.dp)
-                    .height(150.dp)
-                    .padding(start = 4.dp),
-                contentScale = ContentScale.Crop
-            )
-            Column(
-                modifier.padding(
-                    start = 8.dp,
-                    end = 8.dp,
-                    bottom = 8.dp
-                ).height(150.dp),
-                verticalArrangement = Arrangement.SpaceAround
+                    .align(Alignment.TopEnd)
+                    .padding(end = 8.dp, top = 8.dp)
+                    .size(24.dp)
+
             ) {
-
-                ItemInfo(
-                    item.name,
-                    item.size,
-                    item.color
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    tint = Color.Gray,
+                    contentDescription = stringResource(R.string.removeItemAll)
                 )
+            }
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                AsyncImage(
+                    contentDescription = null,
+                    model = item.imageUrl,
+                    placeholder = placeHolder,
+                    modifier = Modifier
+                        .width(150.dp)
+                        .height(150.dp)
+                        .padding(start = 4.dp),
+                    contentScale = ContentScale.Crop
+                )
+                Column(
+                    modifier
+                        .padding(
+                            start = 8.dp,
+                            end = 8.dp,
+                            bottom = 8.dp
+                        )
+                        .height(150.dp),
+                    verticalArrangement = Arrangement.SpaceAround
                 ) {
-                    Text(
-                        text = "${item.priceInRub.toString()} ₽"
+
+                    ItemInfo(
+                        item.name,
+                        item.size,
+                        item.color
                     )
-                    CounterButton(
-                        item.count
-                    )
-                }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+
+                    ) {
+                        Text(
+                            text = "${item.priceInRub.toString()} ₽"
+                        )
+                        CounterButton(
+                            item.count
+                        )
+                    }
                 }
             }
         }
+    }
     }
 
 @Composable
