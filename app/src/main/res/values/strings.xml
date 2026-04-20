@@ -7,7 +7,8 @@
     <string name="cart">Корзина</string>
     <string name="bin_description">Очистить корзину</string>
     <string name="removeItemOne">Убрать 1 из корзины</string>
-    <string name="removeItemAll">Убрать из корзины</string>
+    <string name="removeItemAll">Убрать товар из корзины</string>
     <string name="addItem">Добавить ещё 1 в корзину</string>
+    <string name="addToCart">В корзину</string>
     <string name="cart_empty">Корзина пуста...</string>
 </resources>
