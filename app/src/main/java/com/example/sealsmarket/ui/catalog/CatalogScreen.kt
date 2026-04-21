@@ -1,6 +1,8 @@
 package com.example.sealsmarket.ui.catalog
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -30,29 +32,36 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sealsmarket.R
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.graphics.Color
 import com.example.sealsmarket.data.ProductsData
+import com.example.sealsmarket.model.emptyItem
 import com.example.sealsmarket.ui.NavigationPanel
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
     @Composable
     fun Catalog(modifier: Modifier = Modifier) {
-        Column(
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier.fillMaxSize()
-        ) {
-            CategoryPanel(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            )
-            Content(
-                modifier = Modifier
-                    .padding(16.dp)
-            )
-
-        }
+        Box(modifier = modifier.fillMaxSize()) {
+            Column(
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = modifier.fillMaxSize()
+            ) {
+                CategoryPanel(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                )
+                Content(
+                    modifier = Modifier
+                        .padding(16.dp)
+                )
+            }
+//                ItemInfoSheet(
+//                    item = emptyItem
+//                )
+            }
     }
+
 
     @Composable
     fun CategoryPanel(modifier: Modifier = Modifier) {
@@ -93,7 +102,8 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
             modifier = modifier) {
             items(ProductsData.GetItemsList()) { item ->
                 ItemCardContent(
-                    item,
+                    item =item,
+                    onButtonClick = {},
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
             }

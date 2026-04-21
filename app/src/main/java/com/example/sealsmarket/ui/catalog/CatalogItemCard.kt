@@ -30,6 +30,7 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
 @Composable
     fun ItemCardContent(
         item: Item,
+        onButtonClick: ()->Unit,
         modifier: Modifier = Modifier,
         placeHolder: Painter = painterResource(R.drawable.empty),
     ) {
@@ -68,11 +69,13 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
                     )
 
                     Button(
-                        onClick = {},
+                        onClick = onButtonClick,
                         shape = MaterialTheme.shapes.extraSmall
                     )
                     {
-                        Text(text = "${item.priceInKopecks / 100} ₽")
+                        Text(
+                            text = "${item.priceInKopecks / 100} ₽",
+                            style = MaterialTheme.typography.labelMedium)
                     }
                 }
             }
@@ -106,7 +109,8 @@ fun ItemInfo(
 fun CardPreview(){
     SealsMarketTheme() {
             ItemCardContent(
-                item = emptyItem
+                item = emptyItem,
+                {}
                 )
     }
 }
