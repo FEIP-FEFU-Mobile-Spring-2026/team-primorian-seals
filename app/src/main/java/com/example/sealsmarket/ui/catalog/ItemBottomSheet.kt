@@ -5,8 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -24,6 +23,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,25 +38,35 @@ import coil.compose.AsyncImage
 import com.example.sealsmarket.R
 import com.example.sealsmarket.model.Item
 import com.example.sealsmarket.model.emptyItem
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemInfoSheet(item: Item, modifier: Modifier = Modifier.navigationBarsPadding()){
+fun ItemInfoSheet(
+    item: Item,
+    onClose: ()->Unit,
+    modifier: Modifier = Modifier){
+
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
-    //ModalBottomSheet cоздаёт всплывающее окно
+
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scope = rememberCoroutineScope()
+
     ModalBottomSheet(
-        onDismissRequest = {/*Закрыть*/},
-        sheetState = rememberModalBottomSheetState(
-            skipPartiallyExpanded = true //Сразу открывается во весь размер
-        ),
+        onDismissRequest = {
+            onClose()
+        },
+        sheetState = sheetState,
         shape = MaterialTheme.shapes.medium,
         dragHandle = null,
+        contentWindowInsets = {WindowInsets(0.dp)},
         modifier = modifier){
         Box(
             modifier = Modifier
                 .height(screenHeight * 0.9f)
                 .background(MaterialTheme.colorScheme.primaryContainer)
+                .navigationBarsPadding()
         ) {
             Column() {
                 SheetItemInfo(item, modifier = Modifier.weight(1f))
@@ -77,7 +87,17 @@ fun ItemInfoSheet(item: Item, modifier: Modifier = Modifier.navigationBarsPaddin
                         }
                     }
                     Button(
-                        onClick = {/*Добавить в корзину*/ },
+                        onClick = {
+                            /*Добавить в корзину*/
+
+                            scope.launch {
+                                sheetState.hide()
+                            }.invokeOnCompletion {
+                                if (!sheetState.isVisible) {
+                                    onClose()
+                                }
+                            }},
+
                         shape = MaterialTheme.shapes.medium,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -85,9 +105,7 @@ fun ItemInfoSheet(item: Item, modifier: Modifier = Modifier.navigationBarsPaddin
                             .height(47.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.addToCart) + " · ${item.priceInKopecks / 100} ₽",
-                            style = MaterialTheme.typography.labelLarge //именно здесь это не работает, скорее всего что-то выше переопределяет стиль
-                        )
+                            text = stringResource(R.string.addToCart) + " · ${item.priceInKopecks / 100} ₽")
                     }
                 }
             }
@@ -183,6 +201,7 @@ fun WidnowPreview(){
     ) {innerPadding->
         ItemInfoSheet(
             emptyItem,
+            onClose = {},
             modifier = Modifier
                 .padding(innerPadding))
     }
