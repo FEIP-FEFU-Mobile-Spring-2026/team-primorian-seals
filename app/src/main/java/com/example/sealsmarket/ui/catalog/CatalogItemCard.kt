@@ -49,8 +49,8 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
                     model = item.imageUrl,
                     placeholder = placeHolder,
                     modifier = Modifier
-                        .width(150.dp)
-                        .height(150.dp)
+                        .width(140.dp)
+                        .height(140.dp)
                         .padding(start = 4.dp),
                     contentScale = ContentScale.Crop
                 )
