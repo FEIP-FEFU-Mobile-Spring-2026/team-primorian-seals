@@ -39,7 +39,7 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
     @Composable
     fun Cart(modifier: Modifier = Modifier){
-        //Если корзина не пустая, выводить список товаров,
+        //Если корзина не пустая, выводить список товаров, используя CartItemCard.kt ,
         //итоговую стоимость и кнопку оформления заказа
         ContentEmpty()
     }
