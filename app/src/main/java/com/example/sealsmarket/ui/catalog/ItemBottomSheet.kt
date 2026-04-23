@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.sealsmarket.R
 import com.example.sealsmarket.model.Item
+import com.example.sealsmarket.model.Size
 import com.example.sealsmarket.model.emptyItem
 import kotlinx.coroutines.launch
 
@@ -64,7 +65,7 @@ fun ItemInfoSheet(
     val scope = rememberCoroutineScope()
 
     //Size buttons
-    var selectedSize by remember{ mutableStateOf<String>(item.sizes[0]) }
+    var selectedSize by remember{ mutableStateOf<Size>(item.sizes[0]) }
 
     ModalBottomSheet(
         onDismissRequest = {
@@ -98,7 +99,7 @@ fun ItemInfoSheet(
                     ) {
                         items(item.sizes) { size ->
                             SizeButton(
-                                size = size,
+                                size = size.name,
                                 onClick = {selectedSize=size},
                                 isSelected = (selectedSize==size),
                                 modifier = Modifier.padding(horizontal = 2.dp)
@@ -109,7 +110,7 @@ fun ItemInfoSheet(
                     Button(
                         onClick = {
                             /*Добавить в корзину*/
-                            Toast.makeText(context, "В корзину будет добавлен размер $selectedSize", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "В корзину будет добавлен размер ${selectedSize.name}", Toast.LENGTH_SHORT).show()
                             scope.launch {
                                 sheetState.hide()
                             }.invokeOnCompletion {

@@ -29,7 +29,15 @@ val emptyItem =  Item(
  499900,
 "https://avatars.mds.yandex.net/i?id=84c32eb059489c317f944b5579d9fa3acbe96139-5249054-images-thumbs&ref=rim&n=33&w=241&h=275",
     listOf("New", "Exclusive"),
-    listOf("XXS", "XS", "S", "M", "L", "XL", "XXL"),
+    listOf(
+        Size("size_empty_xxs","XXS"),
+        Size("size_empty_xs","XS"),
+        Size("size_empty_s","S"),
+        Size("size_empty_m","M"),
+        Size("size_empty_l","L"),
+        Size("size_empty_xl","XL"),
+        Size("size_empty_xxl","XXL")
+    ),
 "cat_tshirts",
 "98% хлопок, 2% эластан",
  "250 г",
