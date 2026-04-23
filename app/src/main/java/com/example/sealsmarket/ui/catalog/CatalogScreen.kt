@@ -23,28 +23,34 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.example.sealsmarket.data.ProductsData
 import com.example.sealsmarket.model.Item
 import com.example.sealsmarket.model.emptyItem
+import com.example.sealsmarket.data.ProductsData.ExampleProductsContentHandler
+import com.example.sealsmarket.data.ProductsData.interfaces.IProductsContentReciever
+import com.example.sealsmarket.model.ProductsContent
 import com.example.sealsmarket.ui.NavigationPanel
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
 
     @Composable
-    fun Catalog(modifier: Modifier = Modifier) {
-        var selectedItem by remember { mutableStateOf<Item?>(null) }
+    fun Catalog(productsContentHandler : IProductsContentReciever, modifier: Modifier = Modifier)
+    {
+        val newProductsContent : ProductsContent = productsContentHandler.GetProductsContent() ?: ExampleProductsContentHandler.GetProductsContent();
+		var selectedItem by remember { mutableStateOf<Item?>(null) }
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier.fillMaxSize()
         ) {
             CategoryPanel(
+                productsContent = newProductsContent,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
             )
             Content(
                 onButtonClick = {item-> selectedItem = item },
+                productsContent = newProductsContent,
                 modifier = Modifier
                     .padding(16.dp)
             )
@@ -60,14 +66,15 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
 
     @Composable
-    fun CategoryPanel(modifier: Modifier = Modifier) {
+    fun CategoryPanel(productsContent: ProductsContent, modifier: Modifier = Modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
             modifier = modifier
         ) {
-            LazyRow {
-                items(ProductsData.GetCategoriesList()){
+            LazyRow(
+            ) {
+                items(productsContent.categories){
                     cat -> CategoryButton(
                     cat.name,
                     onClick={/*Фильтрация*/})
@@ -95,16 +102,20 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
     @Composable
     fun Content(
-        onButtonClick: (Item) -> Unit,
-        modifier: Modifier = Modifier
-    ) {
-        LazyColumn(
-            modifier = modifier) {
-            items(ProductsData.GetItemsList()) { item ->
+		onButtonClick: (Item) -> Unit,
+		productsContent: ProductsContent, 
+		modifier: Modifier = Modifier)
+    {
+        LazyColumn( modifier = modifier)
+        {
+            items(productsContent.items)
+            { item ->
                 ItemCardContent(
-                    item = item,
-                    onButtonClick = {onButtonClick(item)},
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    item,
+					onButtonClick = {onButtonClick(item)},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
                 )
             }
         }
@@ -112,15 +123,21 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
     @Composable
     @Preview
-    fun CatalogPreview() {
-        SealsMarketTheme {
+    fun CatalogPreview()
+    {
+        SealsMarketTheme()
+        {
             Scaffold(
-                bottomBar = {
-                    NavigationPanel({},{}) },
+                bottomBar = { NavigationPanel({},{}) },
+
                 modifier = Modifier.fillMaxSize()
-            ) { innerPadding ->
-                Catalog(
-                    modifier = Modifier
+            )
+
+            {
+                innerPadding ->
+                    Catalog(
+                        productsContentHandler = ExampleProductsContentHandler,
+                        modifier = Modifier
                         .padding((innerPadding))
                 )
             }

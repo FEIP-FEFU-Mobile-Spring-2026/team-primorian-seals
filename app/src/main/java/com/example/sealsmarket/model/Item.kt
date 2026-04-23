@@ -1,16 +1,14 @@
 package com.example.sealsmarket.model
 
-import androidx.compose.ui.text.font.FontWeight
-
 data class Item(
     val id: String,
     val name: String,
     val shortDescription: String,
     val longDescription: String,
-    val priceInKopecks: Int,
+    val priceInKopecks: Int,       // В JSON число, в Kotlin Int/Long
     val imageUrl: String,
-    val tags: List<String>,
-    val sizes: List<String>,
+    val tags: List<String>,        // В JSON массив строк
+    val sizes: List<Size>,         // В JSON массив объектов Size
     val categoryId: String,
     val material: String,
     val weight: String,
@@ -18,15 +16,11 @@ data class Item(
     val countryOfOrigin: String
 )
 
-//Информация о товаре, добавленном в корзину
-data class CartItem(
-    val name: String,
-    val color: String,
-    val size: String,
-    val imageUrl: String,
-    val priceInRub: Int,
-    val count: Int
+data class Size(
+    val id: String,
+    val name: String
 )
+
 val emptyItem =  Item(
     "item_001",
 "Футболка современная",
@@ -41,15 +35,6 @@ val emptyItem =  Item(
  "250 г",
 "Всесезон",
 "Турция"
-)
-
-val emptyCartItem = CartItem(
-    name = "Футболка современная",
-    color = "Чёрный",
-    size = "XXL",
-    imageUrl = "https://cdn.100sp.ru/pictures/036231728",
-    priceInRub = 4998,
-    count = 1
 )
 
 
