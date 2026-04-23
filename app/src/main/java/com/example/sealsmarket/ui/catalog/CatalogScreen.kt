@@ -90,7 +90,9 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
             { item ->
                 ItemCardContent(
                     item,
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
                 )
             }
         }
