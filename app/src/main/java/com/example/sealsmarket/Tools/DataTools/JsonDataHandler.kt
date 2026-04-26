@@ -13,21 +13,26 @@ class JsonDataHandler(private val context: Context)
         return File(context.filesDir, fileName)
     }
 
+
     inline fun <reified T> SaveData( data: T, fileName: String)
     {
         val file = GetFile(fileName)
+
         file.writeText(gson.toJson(data))
     }
+
 
     // Загрузка списка
     inline fun <reified T> LoadData(fileName: String): T?
     {
         val file = GetFile(fileName)
+
         if (!file.exists()) return null
 
         val json = file.readText()
 
         val type = object : TypeToken<T>() {}.type
+
         return gson.fromJson(json, type)
     }
 }
