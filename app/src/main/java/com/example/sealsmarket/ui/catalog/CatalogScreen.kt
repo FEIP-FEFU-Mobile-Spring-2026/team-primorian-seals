@@ -19,7 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import com.example.sealsmarket.data.ProductsData.ExampleProductsContentHandler
 import com.example.sealsmarket.data.ProductsData.interfaces.IProductsContentReciever
@@ -31,10 +38,8 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
 @Composable
     fun Catalog(productsContentHandler : IProductsContentReciever, modifier: Modifier = Modifier)
     {
-        val newProductsContent : ProductsContent = productsContentHandler.GetProductsContent() ?: ExampleProductsContentHandler.GetProductsContent();
-
-        val mutItemList = remember { newProductsContent.items.toMutableStateList() }
-        val mutCatList = remember { newProductsContent.categories }
+        val newProductsContent : ProductsContent = productsContentHandler.GetProductsContent() ?: ExampleProductsContentHandler.GetProductsContent()
+        var selectedCatId by rememberSaveable{mutableStateOf(newProductsContent.categories[0].id)}
 
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
@@ -42,17 +47,17 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
             modifier = modifier.fillMaxSize()
         ) {
             CategoryPanel(
-                catList = mutCatList,
+                catList = newProductsContent.categories,
+                selectedCatId = selectedCatId,
+                onBtnClick = {id ->
+                         selectedCatId = id
+                    },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                onBtnClick = {id ->
-                        mutItemList.clear()
-                        mutItemList.addAll(newProductsContent.items.filter { item ->  item.categoryId == id })
-                    }
+                    .padding(vertical = 8.dp)
             )
             Content(
-                itemList = mutItemList,
+                itemList = newProductsContent.items.filter{item -> item.categoryId == selectedCatId},
                 modifier = Modifier
                     .padding(16.dp)
             )
@@ -61,7 +66,11 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
     }
 
     @Composable
-    fun CategoryPanel(catList: List<Category>, modifier: Modifier = Modifier, onBtnClick: (catID : String) -> Unit) {
+    fun CategoryPanel(
+        catList: List<Category>,
+        selectedCatId: String,
+        onBtnClick: (catID : String) -> Unit,
+        modifier: Modifier = Modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
@@ -71,9 +80,9 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
             ) {
                 items(catList){
                     cat -> CategoryButton(
-                    cat.id,
-                    cat.name,
+                    cat,
                     modifier = Modifier,
+                    selectedCatId = selectedCatId,
                     onBtnClick = {id -> onBtnClick(id)}
                     )
                 }
@@ -84,16 +93,23 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
     @Composable
     fun CategoryButton(
-        catID : String,
-        catName: String,
+        cat: Category,
+        selectedCatId: String,
         modifier: Modifier = Modifier,
         onBtnClick: (id: String) -> Unit
     ) {
         Button(
             modifier = modifier.padding(horizontal = 2.dp),
-            onClick = {onBtnClick(catID)},
-        ) {
-            Text(text = catName)
+            onClick = {onBtnClick(cat.id)},
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (selectedCatId==cat.id) MaterialTheme.colorScheme.secondary
+                else
+                    MaterialTheme.colorScheme.primary,
+                contentColor = if (selectedCatId==cat.id) MaterialTheme.colorScheme.onSecondary
+                else
+                    MaterialTheme.colorScheme.onPrimary
+            )){
+            Text(text = cat.name)
         }
     }
 

@@ -34,7 +34,7 @@ fun CounterButton(
     ) {
         IconButton(
             onClick = {},
-            shape = MaterialTheme.shapes.extraSmall
+
         ) {
             Icon(
                 imageVector = Icons.Filled.Remove,
@@ -46,7 +46,6 @@ fun CounterButton(
         )
         IconButton(
             onClick = {},
-            shape = MaterialTheme.shapes.extraSmall
         )
         {
             Icon(
