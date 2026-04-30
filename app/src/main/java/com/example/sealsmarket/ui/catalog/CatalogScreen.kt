@@ -117,10 +117,10 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
             colors = ButtonDefaults.buttonColors(
                 containerColor = if (selectedCatId==cat.id) MaterialTheme.colorScheme.secondary
                 else
-                    MaterialTheme.colorScheme.primary,
-                contentColor = if (selectedCatId==cat.id) MaterialTheme.colorScheme.onSecondary
+                    MaterialTheme.colorScheme.onSurface,
+                contentColor = if (selectedCatId==cat.id) MaterialTheme.colorScheme.secondary
                 else
-                    MaterialTheme.colorScheme.onPrimary
+                    MaterialTheme.colorScheme.secondary
             )){
             Text(
 				text = cat.name,
