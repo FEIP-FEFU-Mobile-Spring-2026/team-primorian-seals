@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -36,8 +37,8 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
     ) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = Color.White,
-                contentColor = Color.DarkGray
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.secondary
             ),
             shape = MaterialTheme.shapes.extraSmall,
             modifier = modifier
@@ -70,12 +71,19 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
                     Button(
                         onClick = onButtonClick,
-                        shape = MaterialTheme.shapes.extraSmall
+                        shape = MaterialTheme.shapes.extraSmall,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary
+                        )
+
                     )
                     {
                         Text(
                             text = "${item.priceInKopecks / 100} ₽",
-                            style = MaterialTheme.typography.labelMedium)
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+
                     }
                 }
             }
@@ -95,12 +103,15 @@ fun ItemInfo(
             text = name,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(top= 8.dp, bottom = 4.dp)
+            modifier = Modifier.padding(top= 8.dp, bottom = 4.dp),
+            color = MaterialTheme.colorScheme.secondary
+
         )
         Text(
             text = shortDescription,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(bottom = 8.dp)
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.padding(bottom = 8.dp),
+            color = MaterialTheme.colorScheme.secondary
         )
     }
 }

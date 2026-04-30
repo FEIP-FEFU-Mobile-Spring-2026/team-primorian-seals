@@ -76,9 +76,10 @@ fun ItemInfoSheet(
         contentWindowInsets = {WindowInsets(0.dp)},
         modifier = modifier){
         Box(
+
             modifier = Modifier
                 .height(screenHeight * 0.94f)
-                .background(MaterialTheme.colorScheme.primaryContainer)
+                .background(MaterialTheme.colorScheme.primary)
                 .navigationBarsPadding()
         ) {
             Column() {
@@ -101,7 +102,9 @@ fun ItemInfoSheet(
                                 size = size,
                                 onClick = {selectedSize=size},
                                 isSelected = (selectedSize==size),
-                                modifier = Modifier.padding(horizontal = 2.dp)
+                                modifier = Modifier.padding(horizontal = 2.dp),
+
+
                             )
                         }
                     }
@@ -119,13 +122,20 @@ fun ItemInfoSheet(
                             }},
 
                         shape = MaterialTheme.shapes.medium,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.onSurface,
+                            contentColor = MaterialTheme.colorScheme.secondary
+                        ),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(start = 8.dp, end = 8.dp)
+
                             .height(47.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.addToCart) + " · ${item.priceInKopecks / 100} ₽")
+                            text = stringResource(R.string.addToCart) + " · ${item.priceInKopecks / 100} ₽",
+                            color = MaterialTheme.colorScheme.secondary,
+                            style = MaterialTheme.typography.bodyLarge)
                     }
                 }
             }
@@ -135,8 +145,10 @@ fun ItemInfoSheet(
                 items(item.tags) { tag ->
                     TagText(
                         text = tag,
-                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 16.dp)
+                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 16.dp),
+
                     )
+
                 }
             }
         }
@@ -164,9 +176,9 @@ fun SheetItemInfo(item:Item, modifier: Modifier = Modifier){
 
         Text(
             text = item.name,
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.padding(
                 bottom = 8.dp,
                 start = 8.dp,
@@ -176,7 +188,7 @@ fun SheetItemInfo(item:Item, modifier: Modifier = Modifier){
 
             Text(
                 text = item.longDescription,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
@@ -184,7 +196,7 @@ fun SheetItemInfo(item:Item, modifier: Modifier = Modifier){
                         start = 8.dp,
                         end = 8.dp
                     ),
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = MaterialTheme.colorScheme.secondary
             )
 
     }
@@ -200,12 +212,11 @@ fun SizeButton(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = if(isSelected)
-                MaterialTheme.colorScheme.primary
+                MaterialTheme.colorScheme.surface
             else MaterialTheme.colorScheme.surfaceBright,
 
-            contentColor = if(isSelected)
-            MaterialTheme.colorScheme.onPrimary
-        else MaterialTheme.colorScheme.onSurface
+            contentColor = MaterialTheme.colorScheme.secondary
+
 
         ),
         shape = MaterialTheme.shapes.extraLarge,
@@ -218,12 +229,13 @@ fun SizeButton(
 fun TagText(text:String, modifier: Modifier = Modifier){
     Surface(
         shape = MaterialTheme.shapes.extraLarge,
-        color = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.onPrimary,
+        color = MaterialTheme.colorScheme.onSecondary,
+        contentColor = MaterialTheme.colorScheme.secondary,
         modifier = modifier) {
         Text(
             text = text,
             modifier = Modifier.padding(8.dp))
+
     }
 }
 @Preview
