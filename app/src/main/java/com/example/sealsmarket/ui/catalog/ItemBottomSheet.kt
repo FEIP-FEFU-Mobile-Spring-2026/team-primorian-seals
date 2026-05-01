@@ -96,7 +96,8 @@ fun ItemInfoSheet(
                 ) {
                     //Строка с размерами
                     LazyRow(
-                        contentPadding = PaddingValues(bottom = 16.dp)
+                        contentPadding = PaddingValues(bottom = 16.dp),
+                        modifier = Modifier.padding(horizontal = 16.dp )
                     ) {
                         items(item.sizes) { size ->
                             SizeButton(
