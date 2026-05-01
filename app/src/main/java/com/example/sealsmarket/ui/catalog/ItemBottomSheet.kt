@@ -41,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.sealsmarket.R
 import com.example.sealsmarket.model.Item
@@ -125,7 +126,7 @@ fun ItemInfoSheet(
                         shape = MaterialTheme.shapes.medium,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.onSurface,
-                            contentColor = MaterialTheme.colorScheme.secondary
+                            contentColor = MaterialTheme.colorScheme.onPrimary
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -135,7 +136,7 @@ fun ItemInfoSheet(
                     ) {
                         Text(
                             text = stringResource(R.string.addToCart) + " · ${item.priceInKopecks / 100} ₽",
-                            color = MaterialTheme.colorScheme.secondary,
+                            color = MaterialTheme.colorScheme.onPrimary,
                             style = MaterialTheme.typography.bodyLarge)
                     }
                 }
@@ -179,6 +180,7 @@ fun SheetItemInfo(item:Item, modifier: Modifier = Modifier){
             text = item.name,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
+            fontSize = 22.sp,
             color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.padding(
                 bottom = 8.dp,
@@ -190,6 +192,7 @@ fun SheetItemInfo(item:Item, modifier: Modifier = Modifier){
             Text(
                 text = item.longDescription,
                 style = MaterialTheme.typography.labelMedium,
+                fontSize = 18.sp,
                 modifier = Modifier
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
@@ -235,7 +238,9 @@ fun TagText(text:String, modifier: Modifier = Modifier){
         modifier = modifier) {
         Text(
             text = text,
-            modifier = Modifier.padding(8.dp))
+            modifier = Modifier.padding(8.dp),
+            color = MaterialTheme.colorScheme.onPrimary)
+
 
     }
 }

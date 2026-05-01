@@ -17,7 +17,8 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = Pink80,
     surface = DarkBlue80,
     onSurface = CoolBlue80,
-    onSecondary = TagBlue80
+    onSecondary = TagBlue80,
+    onPrimary =CartAndTagText
 
 
 )
@@ -27,8 +28,9 @@ private val LightColorScheme = lightColorScheme(
     secondary = PurpleGrey40,
     tertiary = Pink40,
     surface = LightBlue40,
-    onSurface = CoolBlue80,
-    onSecondary = TagBlue80
+    onSurface = GreatBlue40,
+    onSecondary = TagBlue80,
+    onPrimary =CartAndTagText
 
 
     /* Other default colors to override

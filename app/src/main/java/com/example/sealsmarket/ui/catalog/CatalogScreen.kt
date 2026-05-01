@@ -115,7 +115,7 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
             modifier = modifier.padding(horizontal = 2.dp),
             onClick = {onBtnClick(cat.id)},
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (selectedCatId==cat.id) MaterialTheme.colorScheme.secondary
+                containerColor = if (selectedCatId==cat.id) MaterialTheme.colorScheme.tertiary
                 else
                     MaterialTheme.colorScheme.onSurface,
                 contentColor = if (selectedCatId==cat.id) MaterialTheme.colorScheme.secondary
@@ -124,7 +124,9 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
             )){
             Text(
 				text = cat.name,
-				style = MaterialTheme.typography.labelMedium)
+				style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onPrimary)
+
         }
     }
 
