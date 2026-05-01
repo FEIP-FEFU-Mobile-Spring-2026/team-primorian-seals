@@ -70,7 +70,7 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
             selectedItem?.let {
                 ItemInfoSheet(
-                    item = emptyItem,
+                    item = it,
                     onClose = { selectedItem=null }
                 )
             }
