@@ -1,6 +1,7 @@
 package com.example.sealsmarket.data.ProductsData
 
 import Category
+import androidx.compose.runtime.toMutableStateList
 import cat_new
 import com.example.sealsmarket.data.ProductsData.interfaces.IProductsContentReciever
 import com.example.sealsmarket.model.Item
@@ -11,8 +12,8 @@ object ExampleProductsContentHandler : IProductsContentReciever
 {
     override fun GetProductsContent(): ProductsContent {
         val productsContent = ProductsContent(
-            categories = GetExampleCategoriesList(),
-            items = GetExampleItemsList()
+            categories = GetExampleCategoriesList().toMutableList(),
+            items = GetExampleItemsList().toMutableList()
         );
 
         return productsContent
@@ -22,6 +23,17 @@ object ExampleProductsContentHandler : IProductsContentReciever
     {
         return listOf<Category>(cat_new) + listOf<Category>(
             Category(
+                id = "New",
+                name = "New"
+            ),
+            Category(
+                id = "Popular",
+                name = "Popular"
+            ),
+            Category(
+                id = "Sale",
+                name = "Sale"
+            ),            Category(
                 id = "cat_jeans",
                 name = "Джинсы"
             ),

@@ -63,7 +63,7 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
             )
             Content(
                 onButtonClick = {item-> selectedItem = item },
-                itemList = newProductsContent.items.filter{item -> item.categoryId == selectedCatId},
+                itemList = newProductsContent.items.filter{item -> item.categoryId == selectedCatId || item.tags.contains(selectedCatId)},
                 modifier = Modifier
                     .padding(16.dp)
             )
