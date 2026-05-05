@@ -11,8 +11,8 @@ object ExampleProductsContentHandler : IProductsContentReciever
 {
     override fun GetProductsContent(): ProductsContent {
         val productsContent = ProductsContent(
-            categories = GetExampleCategoriesList(),
-            items = GetExampleItemsList()
+            categories = GetExampleCategoriesList().toMutableList(),
+            items = GetExampleItemsList().toMutableList()
         );
 
         return productsContent
@@ -21,6 +21,17 @@ object ExampleProductsContentHandler : IProductsContentReciever
     fun GetExampleCategoriesList(): List<Category>
     {
         return listOf<Category>(cat_new) + listOf<Category>(
+            Category(
+                id = "New",
+                name = "New"
+            ),Category(
+                id = "Popular",
+                name = "Popular"
+            ),
+            Category(
+                id = "Sale",
+                name = "Sale"
+            ),
             Category(
                 id = "cat_jeans",
                 name = "Джинсы"
