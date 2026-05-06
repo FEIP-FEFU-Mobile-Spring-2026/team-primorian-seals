@@ -27,6 +27,13 @@ import com.example.sealsmarket.model.Item
 import com.example.sealsmarket.model.emptyItem
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
+fun formatPrice(priceInKopecks: Int): String {
+    val rubles = priceInKopecks / 100
+
+    val formatted = String.format("%,d", rubles).replace(",", " ")
+    return "$formatted ₽"
+}
+
 @Composable
     fun ItemCardContent(
         item: Item,
@@ -72,7 +79,7 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
                         shape = MaterialTheme.shapes.extraSmall
                     )
                     {
-                        Text(text = "${item.priceInKopecks / 100} ₽")
+                        Text(text = formatPrice(item.priceInKopecks))
                     }
                 }
             }
