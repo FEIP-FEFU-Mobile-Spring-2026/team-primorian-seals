@@ -12,9 +12,9 @@ class AssetsProductsContentHandler(val assetsJsonReader: AssetsJsonReader) : IPr
         val handler = assetsJsonReader.ReadFromAssets<ProductsContent>("resources/products.json");
 
         // Добавляем категорию вручную
-        handler?.categories?.add(0, Category(id = "New", name = "New"))
-        handler?.categories?.add(1, Category(id = "Popular", name = "Popular"))
-        handler?.categories?.add(2, Category(id = "Sale", name = "Sale"))
+        handler?.categories?.add(0, Category(id = "New", name = "Новинки"))
+        handler?.categories?.add(1, Category(id = "Popular", name = "Популярное"))
+        handler?.categories?.add(2, Category(id = "Sale", name = "Распродажа"))
 
         return handler;
     }

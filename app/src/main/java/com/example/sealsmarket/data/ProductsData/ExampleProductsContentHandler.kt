@@ -33,7 +33,8 @@ object ExampleProductsContentHandler : IProductsContentReciever
             Category(
                 id = "Sale",
                 name = "Sale"
-            ),            Category(
+            ),
+            Category(
                 id = "cat_jeans",
                 name = "Джинсы"
             ),
