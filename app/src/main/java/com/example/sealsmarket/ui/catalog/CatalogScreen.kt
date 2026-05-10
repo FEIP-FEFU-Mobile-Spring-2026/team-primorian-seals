@@ -10,145 +10,127 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.toMutableStateList
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sealsmarket.data.ProductsData.ExampleProductsContentHandler
 import com.example.sealsmarket.data.ProductsData.interfaces.IProductsContentReciever
 import com.example.sealsmarket.model.Item
-import com.example.sealsmarket.model.ProductsContent
 import com.example.sealsmarket.ui.NavigationPanel
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
 @Composable
-    fun Catalog(productsContentHandler : IProductsContentReciever, modifier: Modifier = Modifier)
-    {
-        val newProductsContent : ProductsContent = productsContentHandler.GetProductsContent() ?: ExampleProductsContentHandler.GetProductsContent()
-        var selectedCatId by rememberSaveable{mutableStateOf(newProductsContent.categories[0].id)}
+fun Catalog(
+    productsContentHandler: IProductsContentReciever,
+    modifier: Modifier = Modifier,
+    viewModel: CatalogViewModel = viewModel { CatalogViewModel(productsContentHandler) }
+) {
+    val productsContent by viewModel.productsContent.collectAsState()
+    val selectedCatId by viewModel.selectedCatId.collectAsState()
 
-        Column(
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier.fillMaxSize()
-        ) {
-            CategoryPanel(
-                catList = newProductsContent.categories,
-                selectedCatId = selectedCatId,
-                onBtnClick = {id ->
-                         selectedCatId = id
-                    },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            )
-            Content(
-                itemList = newProductsContent.items.filter{item -> item.categoryId == selectedCatId || item.tags.contains(selectedCatId)},
-                modifier = Modifier
-                    .padding(16.dp)
-            )
-
-        }
+    Column(
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.fillMaxSize()
+    ) {
+        CategoryPanel(
+            catList = productsContent?.categories ?: emptyList(),
+            selectedCatId = selectedCatId,
+            onBtnClick = { id -> viewModel.selectCategory(id) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        )
+        Content(
+            itemList = viewModel.getFilteredItems(),
+            modifier = Modifier.padding(16.dp)
+        )
     }
+}
 
-    @Composable
-    fun CategoryPanel(
-        catList: List<Category>,
-        selectedCatId: String,
-        onBtnClick: (catID : String) -> Unit,
-        modifier: Modifier = Modifier) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = modifier
-        ) {
-            LazyRow(
-            ) {
-                items(catList){
-                    cat -> CategoryButton(
+@Composable
+fun CategoryPanel(
+    catList: List<Category>,
+    selectedCatId: String,
+    onBtnClick: (catID: String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = modifier
+    ) {
+        LazyRow {
+            items(catList) { cat ->
+                CategoryButton(
                     cat,
                     modifier = Modifier,
                     selectedCatId = selectedCatId,
-                    onBtnClick = {id -> onBtnClick(id)}
-                    )
-                }
+                    onBtnClick = { id -> onBtnClick(id) }
+                )
             }
         }
     }
+}
 
-
-    @Composable
-    fun CategoryButton(
-        cat: Category,
-        selectedCatId: String,
-        modifier: Modifier = Modifier,
-        onBtnClick: (id: String) -> Unit
+@Composable
+fun CategoryButton(
+    cat: Category,
+    selectedCatId: String,
+    modifier: Modifier = Modifier,
+    onBtnClick: (id: String) -> Unit
+) {
+    Button(
+        modifier = modifier.padding(horizontal = 2.dp),
+        onClick = { onBtnClick(cat.id) },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = if (selectedCatId == cat.id) MaterialTheme.colorScheme.secondary
+            else MaterialTheme.colorScheme.primary,
+            contentColor = if (selectedCatId == cat.id) MaterialTheme.colorScheme.onSecondary
+            else MaterialTheme.colorScheme.onPrimary
+        )
     ) {
-        Button(
-            modifier = modifier.padding(horizontal = 2.dp),
-            onClick = {onBtnClick(cat.id)},
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (selectedCatId==cat.id) MaterialTheme.colorScheme.secondary
-                else
-                    MaterialTheme.colorScheme.primary,
-                contentColor = if (selectedCatId==cat.id) MaterialTheme.colorScheme.onSecondary
-                else
-                    MaterialTheme.colorScheme.onPrimary
-            )){
-            Text(text = cat.name)
-        }
+        Text(text = cat.name)
     }
+}
 
-    @Composable
-    fun Content(itemList: List<Item>, modifier: Modifier = Modifier)
-    {
-        LazyColumn( modifier = modifier)
-        {
-            items(itemList)
-            { item ->
-                ItemCardContent(
-                    item,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                )
-            }
-        }
-    }
-
-    @Composable
-    @Preview
-    fun CatalogPreview()
-    {
-        SealsMarketTheme()
-        {
-            Scaffold(
-                bottomBar = { NavigationPanel({},{}) },
-
-                modifier = Modifier.fillMaxSize()
+@Composable
+fun Content(itemList: List<Item>, modifier: Modifier = Modifier) {
+    LazyColumn(modifier = modifier) {
+        items(itemList) { item ->
+            ItemCardContent(
+                item,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
             )
-
-            {
-                innerPadding ->
-                    Catalog(
-                        productsContentHandler = ExampleProductsContentHandler,
-                        modifier = Modifier
-                        .padding((innerPadding))
-                )
-            }
         }
     }
+}
+
+@Composable
+@Preview
+fun CatalogPreview() {
+    SealsMarketTheme {
+        Scaffold(
+            bottomBar = { NavigationPanel({ }, { }) },
+            modifier = Modifier.fillMaxSize()
+        ) { innerPadding ->
+            Catalog(
+                productsContentHandler = ExampleProductsContentHandler,
+                modifier = Modifier.padding(innerPadding)
+            )
+        }
+    }
+}
