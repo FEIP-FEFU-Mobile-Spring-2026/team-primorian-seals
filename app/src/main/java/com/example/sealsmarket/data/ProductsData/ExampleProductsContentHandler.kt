@@ -1,6 +1,7 @@
 package com.example.sealsmarket.data.ProductsData
 
 import Category
+import androidx.compose.runtime.toMutableStateList
 import cat_new
 import com.example.sealsmarket.data.ProductsData.interfaces.IProductsContentReciever
 import com.example.sealsmarket.model.Item
@@ -24,7 +25,8 @@ object ExampleProductsContentHandler : IProductsContentReciever
             Category(
                 id = "New",
                 name = "New"
-            ),Category(
+            ),
+            Category(
                 id = "Popular",
                 name = "Popular"
             ),

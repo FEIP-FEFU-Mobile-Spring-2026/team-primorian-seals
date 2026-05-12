@@ -33,8 +33,7 @@ fun CounterButton(
             .height(42.dp)
     ) {
         IconButton(
-            onClick = {},
-
+            onClick = {}
         ) {
             Icon(
                 imageVector = Icons.Filled.Remove,
@@ -45,7 +44,7 @@ fun CounterButton(
             text = count.toString()
         )
         IconButton(
-            onClick = {},
+            onClick = {}
         )
         {
             Icon(

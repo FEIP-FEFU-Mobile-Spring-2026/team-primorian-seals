@@ -79,17 +79,20 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
             ) {
+            //Цвета нужно настроить, при чём с учётом тёмной темы. Можно использовать и не secondary
             Text(
                 text = stringResource(R.string.cart_empty),
                 fontSize = 24.sp,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.secondary,
                 fontWeight = FontWeight.W500
             )
             Image(
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(Color.Gray),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary),
                 painter = painterResource(R.drawable.cart_empty),
-                modifier = Modifier.padding(end = 8.dp)
+                modifier = Modifier
+                    .padding(end = 8.dp)
+
             )
 
         }

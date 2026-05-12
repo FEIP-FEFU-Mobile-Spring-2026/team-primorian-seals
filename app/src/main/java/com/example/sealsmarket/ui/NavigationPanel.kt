@@ -79,7 +79,7 @@ fun NavButton(
         ) {
             Icon(
                 imageVector = if (isActive) selectedIcon else unselectedIcon,
-                tint = if(isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
+                tint = if(isActive) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.secondary,
                 contentDescription = null,
                 modifier = if(isActive) Modifier.size(29.dp) else Modifier.size(24.dp)
             )
