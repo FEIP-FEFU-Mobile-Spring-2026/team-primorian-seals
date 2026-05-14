@@ -114,16 +114,7 @@ fun CategoryButton(
     modifier: Modifier = Modifier,
     onBtnClick: (id: String) -> Unit
 ) {
-    Button(
-        modifier = modifier.padding(horizontal = 2.dp),
-        onClick = { onBtnClick(cat.id) },
-        colors = ButtonDefaults.buttonColors(
-            containerColor = if (selectedCatId == cat.id) MaterialTheme.colorScheme.secondary
-            else MaterialTheme.colorScheme.primary,
-            contentColor = if (selectedCatId == cat.id) MaterialTheme.colorScheme.onSecondary
-            else MaterialTheme.colorScheme.onPrimary
-        )
-    ) {
+
         Button(
             modifier = modifier.padding(horizontal = 2.dp),
             onClick = {onBtnClick(cat.id)},
@@ -142,7 +133,7 @@ fun CategoryButton(
 
         }
     }
-}
+
 
     @Composable
     fun Content(

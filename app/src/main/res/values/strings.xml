@@ -11,4 +11,10 @@
     <string name="addItem">Добавить ещё 1 в корзину</string>
     <string name="addToCart">В корзину</string>
     <string name="cart_empty">Корзина пуста...</string>
+    <string name="info_button">Больше информации</string>
+    <string name="material">Материал:</string>
+    <string name="weight">Вес:</string>
+    <string name="season">Сезон:</string>
+    <string name="country_of_origin">Страна производства:</string>
+    <string name="close">Закрыть</string>
 </resources>

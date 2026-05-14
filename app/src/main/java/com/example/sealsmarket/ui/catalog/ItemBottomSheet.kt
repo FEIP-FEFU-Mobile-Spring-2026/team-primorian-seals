@@ -6,18 +6,25 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -30,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -68,6 +76,8 @@ fun ItemInfoSheet(
     //Size buttons
     var selectedSize by remember{ mutableStateOf<Size>(item.sizes[0]) }
 
+    //Info dialog
+    var isDialogOpened by rememberSaveable{mutableStateOf<Boolean>(false) }
     ModalBottomSheet(
         onDismissRequest = {
             onClose()
@@ -87,7 +97,10 @@ fun ItemInfoSheet(
             Column() {
 
                 //Информация в верхней половине экрана
-                SheetItemInfo(item, modifier = Modifier.weight(1f))
+                SheetItemInfo(
+                    item,
+                    {isDialogOpened = true},
+                    modifier = Modifier.weight(1f))
 
                 //Информация в нижней половине экрана
                 Column(
@@ -154,12 +167,19 @@ fun ItemInfoSheet(
 
                 }
             }
+
+            if(isDialogOpened){
+                InfoDialog(item, onClose = {isDialogOpened = false})
+            }
         }
     }
 }
 
 @Composable
-fun SheetItemInfo(item:Item, modifier: Modifier = Modifier){
+fun SheetItemInfo(
+    item:Item,
+    onBtnClick: ()->Unit,
+    modifier: Modifier = Modifier){
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start,
@@ -177,19 +197,38 @@ fun SheetItemInfo(item:Item, modifier: Modifier = Modifier){
             alignment = Alignment.Center
         )
 
-        Text(
-            text = item.name,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-            fontSize = 22.sp,
-            color = MaterialTheme.colorScheme.secondary,
-            modifier = Modifier.padding(
-                bottom = 8.dp,
-                start = 8.dp,
-                end = 8.dp
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = item.name,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                fontSize = 22.sp,
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.padding(
+                    top = 8.dp,
+                    bottom = 8.dp,
+                    start = 8.dp,
+                    end = 8.dp
+                )
             )
-        )
 
+            //Кнопка для открытия диалога с дополнительной информацией
+            IconButton(
+                onClick = {onBtnClick()},
+                modifier = Modifier.size(32.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    contentDescription = stringResource(R.string.info_button),
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
             Text(
                 text = item.longDescription,
                 style = MaterialTheme.typography.labelMedium,
