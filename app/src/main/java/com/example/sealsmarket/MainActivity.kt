@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.sealsmarket.data.ProductsData.ApiProductsContentHandler
 import com.example.sealsmarket.data.ProductsData.AssetsProductsContentHandler
 import com.example.sealsmarket.data.ProductsData.ExampleProductsContentHandler
 import com.example.sealsmarket.navigation.Routes
@@ -41,9 +42,8 @@ class MainActivity : ComponentActivity() {
         val navBackStackEntry = navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry.value?.destination?.route
 
-        val assetsJsonReader = AssetsJsonReader(this);
-
-        val assetsProductsContentHandler = AssetsProductsContentHandler(assetsJsonReader)
+        // Используем API для загрузки данных каталога
+        val apiProductsContentHandler = ApiProductsContentHandler()
 
         Scaffold(
             topBar = {
@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
                 composable(Routes.CATALOG)
                 {
                     Catalog(
-                        productsContentHandler = assetsProductsContentHandler,
+                        productsContentHandler = apiProductsContentHandler,
                         modifier = modifier
                             .padding((innerPadding))
                     )

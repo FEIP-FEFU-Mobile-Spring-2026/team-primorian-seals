@@ -1,22 +1,26 @@
 package com.example.sealsmarket.data.ProductsData
 
-import Category
+import com.example.sealsmarket.model.Category
 import androidx.compose.runtime.toMutableStateList
-import cat_new
+import com.example.sealsmarket.model.cat_new
 import com.example.sealsmarket.data.ProductsData.interfaces.IProductsContentReciever
 import com.example.sealsmarket.model.Item
 import com.example.sealsmarket.model.ProductsContent
 import com.example.sealsmarket.model.emptyItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 object ExampleProductsContentHandler : IProductsContentReciever
 {
-    override fun GetProductsContent(): ProductsContent {
-        val productsContent = ProductsContent(
-            categories = GetExampleCategoriesList().toMutableList(),
-            items = GetExampleItemsList().toMutableList()
-        );
+    override suspend fun GetProductsContent(): ProductsContent {
+        return withContext(Dispatchers.IO) {
+            val productsContent = ProductsContent(
+                categories = GetExampleCategoriesList().toMutableList(),
+                items = GetExampleItemsList().toMutableList()
+            );
 
-        return productsContent
+            productsContent
+        }
     }
 
     fun GetExampleCategoriesList(): List<Category>

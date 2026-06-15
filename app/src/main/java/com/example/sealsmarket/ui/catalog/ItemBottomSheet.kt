@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -47,6 +48,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,246 +57,303 @@ import com.example.sealsmarket.R
 import com.example.sealsmarket.model.Item
 import com.example.sealsmarket.model.Size
 import com.example.sealsmarket.model.emptyItem
+import com.example.sealsmarket.ui.theme.SealsMarketTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemInfoSheet(
     item: Item,
-    onClose: ()->Unit,
-    modifier: Modifier = Modifier){
-
-    //Screen
+    onClose: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val context = LocalContext.current
 
-    //Modal window
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
 
-    //Size buttons
-    var selectedSize by remember{ mutableStateOf<Size>(item.sizes[0]) }
+    var selectedSize by remember { mutableStateOf<Size>(item.sizes.firstOrNull() ?: item.sizes[0]) }
+    var isDialogOpened by rememberSaveable { mutableStateOf(false) }
 
-    //Info dialog
-    var isDialogOpened by rememberSaveable{mutableStateOf<Boolean>(false) }
     ModalBottomSheet(
-        onDismissRequest = {
-            onClose()
-        },
+        onDismissRequest = { onClose() },
         sheetState = sheetState,
-        shape = MaterialTheme.shapes.medium,
-        dragHandle = null,
-        contentWindowInsets = {WindowInsets(0.dp)},
-        modifier = modifier){
+        shape = MaterialTheme.shapes.large,
+        dragHandle = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(top = 12.dp, bottom = 8.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(width = 32.dp, height = 4.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                            shape = MaterialTheme.shapes.small
+                        )
+                )
+            }
+        },
+        contentWindowInsets = { WindowInsets(0.dp) },
+        modifier = modifier
+    ) {
         Box(
-
             modifier = Modifier
-                .height(screenHeight * 0.94f)
-                .background(MaterialTheme.colorScheme.primary)
+                .fillMaxWidth()
                 .navigationBarsPadding()
         ) {
-            Column() {
-
-                //Информация в верхней половине экрана
-                SheetItemInfo(
-                    item,
-                    {isDialogOpened = true},
-                    modifier = Modifier.weight(1f))
-
-                //Информация в нижней половине экрана
-                Column(
-                    verticalArrangement = Arrangement.Bottom,
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                // Изображение товара
+                AsyncImage(
+                    contentDescription = null,
+                    model = item.imageUrl,
+                    placeholder = painterResource(R.drawable.empty),
                     modifier = Modifier
-                        .padding(vertical = 16.dp)
+                        .fillMaxWidth()
+                        .height(280.dp),
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center
+                )
+
+                // Контент с прокруткой
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp)
                 ) {
-                    //Строка с размерами
+                    // Название и цена в одну строку
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = item.name,
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text = "${item.priceInKopecks / 100} ₽",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(start = 12.dp)
+                        )
+                    }
+
+                    // Краткое описание
+                    Text(
+                        text = item.shortDescription,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
+                    )
+
+                    // Теги
+                    if (item.tags.isNotEmpty()) {
+                        LazyRow(
+                            contentPadding = PaddingValues(vertical = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        ) {
+                            items(item.tags) { tag ->
+                                TagText(text = tag)
+                            }
+                        }
+                    }
+
+                    // Разделитель
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(MaterialTheme.colorScheme.outlineVariant)
+                    )
+
+                    // Дополнительная информация
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp)
+                    ) {
+                        Column {
+                            Text(
+                                text = "Материал",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = item.material,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                        Column(
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Text(
+                                text = "Страна",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = item.countryOfOrigin,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+
+                    // Кнопка информации
+                    IconButton(
+                        onClick = { isDialogOpened = true },
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            tint = MaterialTheme.colorScheme.primary,
+                            contentDescription = stringResource(R.string.info_button)
+                        )
+                    }
+
+                    // Размеры
+                    Text(
+                        text = "Выберите размер",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(vertical = 16.dp)
+                    )
+
                     LazyRow(
-                        contentPadding = PaddingValues(bottom = 16.dp),
-                        modifier = Modifier.padding(horizontal = 16.dp )
+                        contentPadding = PaddingValues(vertical = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(item.sizes) { size ->
                             SizeButton(
                                 size = size.name,
-                                onClick = {selectedSize=size},
-                                isSelected = (selectedSize==size),
-                                modifier = Modifier.padding(horizontal = 2.dp),
-
-
+                                onClick = { selectedSize = size },
+                                isSelected = (selectedSize == size)
                             )
                         }
                     }
-                    //Кнопка добавления в корзину
-                    Button(
-                        onClick = {
-                            /*Добавить в корзину*/
-                            Toast.makeText(context, "В корзину будет добавлен размер ${selectedSize.name}", Toast.LENGTH_SHORT).show()
-                            scope.launch {
-                                sheetState.hide()
-                            }.invokeOnCompletion {
-                                if (!sheetState.isVisible) {
-                                    onClose()
-                                }
-                            }},
+                }
+            }
 
-                        shape = MaterialTheme.shapes.medium,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.onSurface,
-                            contentColor = MaterialTheme.colorScheme.onPrimary
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 8.dp, end = 8.dp)
-
-                            .height(47.dp)
-                    ) {
-                        Text(
-                            text = stringResource(R.string.addToCart) + " · ${item.priceInKopecks / 100} ₽",
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            style = MaterialTheme.typography.bodyLarge)
+            // Кнопка добавления в корзину внизу
+            Button(
+                onClick = {
+                    Toast.makeText(
+                        context,
+                        "В корзину будет добавлен размер ${selectedSize.name}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    scope.launch {
+                        sheetState.hide()
+                    }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            onClose()
+                        }
                     }
-                }
-            }
-            //Теги
-            LazyRow(modifier = Modifier
-                .align(Alignment.TopStart)) {
-                items(item.tags) { tag ->
-                    TagText(
-                        text = tag,
-                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 16.dp),
-
-                    )
-
-                }
-            }
-
-            if(isDialogOpened){
-                InfoDialog(item, onClose = {isDialogOpened = false})
-            }
-        }
-    }
-}
-
-@Composable
-fun SheetItemInfo(
-    item:Item,
-    onBtnClick: ()->Unit,
-    modifier: Modifier = Modifier){
-    Column(
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start,
-        modifier = modifier
-            .padding(horizontal = 8.dp, vertical = 16.dp)
-    ) {
-        AsyncImage(
-            contentDescription = null,
-            model = item.imageUrl,
-            placeholder = painterResource(R.drawable.empty),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp),
-            contentScale = ContentScale.Crop,
-            alignment = Alignment.Center
-        )
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = item.name,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold,
-                fontSize = 22.sp,
-                color = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.padding(
-                    top = 8.dp,
-                    bottom = 8.dp,
-                    start = 8.dp,
-                    end = 8.dp
-                )
-            )
-
-            //Кнопка для открытия диалога с дополнительной информацией
-            IconButton(
-                onClick = {onBtnClick()},
-                modifier = Modifier.size(32.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    contentDescription = stringResource(R.string.info_button),
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-        }
-            Text(
-                text = item.longDescription,
-                style = MaterialTheme.typography.labelMedium,
-                fontSize = 18.sp,
+                },
+                shape = MaterialTheme.shapes.medium,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
                 modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
-                    .padding(
-                        start = 8.dp,
-                        end = 8.dp
-                    ),
-                color = MaterialTheme.colorScheme.secondary
-            )
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .padding(bottom = 16.dp)
+                    .height(56.dp)
+            ) {
+                Text(
+                    text = "В корзину · ${item.priceInKopecks / 100} ₽",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Medium
+                )
+            }
 
+            if (isDialogOpened) {
+                InfoDialog(item, onClose = { isDialogOpened = false })
+            }
+        }
     }
 }
+
 @Composable
 fun SizeButton(
     size: String,
-    onClick: ()->Unit,
+    onClick: () -> Unit,
     isSelected: Boolean,
     modifier: Modifier = Modifier
-){
+) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            containerColor = if(isSelected)
-                MaterialTheme.colorScheme.surface
-            else MaterialTheme.colorScheme.surfaceBright,
-
-            contentColor = MaterialTheme.colorScheme.secondary
-
-
+            containerColor = if (isSelected)
+                MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = if (isSelected)
+                MaterialTheme.colorScheme.onPrimary
+            else MaterialTheme.colorScheme.onSurfaceVariant
         ),
-        shape = MaterialTheme.shapes.extraLarge,
-        modifier = modifier){
-        Text(text = size)
+        shape = MaterialTheme.shapes.medium,
+        modifier = Modifier.width(64.dp).then(modifier).height(40.dp)
+    ) {
+        Text(
+            text = size,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
+        )
     }
 }
 
 @Composable
-fun TagText(text:String, modifier: Modifier = Modifier){
+fun TagText(text: String, modifier: Modifier = Modifier) {
     Surface(
-        shape = MaterialTheme.shapes.extraLarge,
-        color = MaterialTheme.colorScheme.onSecondary,
-        contentColor = MaterialTheme.colorScheme.secondary,
-        modifier = modifier) {
+        shape = MaterialTheme.shapes.small,
+        color = when (text) {
+            "New" -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f)
+            "Sale" -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.8f)
+            "Popular" -> MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.8f)
+            "Exclusive" -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f)
+            else -> MaterialTheme.colorScheme.surfaceVariant
+        },
+        contentColor = when (text) {
+            "New" -> MaterialTheme.colorScheme.onPrimaryContainer
+            "Sale" -> MaterialTheme.colorScheme.onErrorContainer
+            "Popular" -> MaterialTheme.colorScheme.onTertiaryContainer
+            "Exclusive" -> MaterialTheme.colorScheme.onSecondaryContainer
+            else -> MaterialTheme.colorScheme.onSurfaceVariant
+        },
+        modifier = modifier
+    ) {
         Text(
             text = text,
-            modifier = Modifier.padding(8.dp),
-            color = MaterialTheme.colorScheme.onPrimary)
-
-
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.Medium
+        )
     }
 }
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun WidnowPreview(){
-    Scaffold(
-        modifier = Modifier.background(Color.Gray)
-    ) {innerPadding->
+fun ItemInfoSheetPreview() {
+    SealsMarketTheme {
         ItemInfoSheet(
-            emptyItem,
-            onClose = {},
-            modifier = Modifier
-                .padding(innerPadding))
+            item = emptyItem,
+            onClose = {}
+        )
     }
-
 }

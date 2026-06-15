@@ -1,5 +1,6 @@
 package com.example.sealsmarket.model
-import Category
+
+import com.example.sealsmarket.model.Category
 
 data class ProductsContent(
     var categories: MutableList<Category>,
