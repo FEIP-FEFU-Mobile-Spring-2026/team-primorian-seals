@@ -38,7 +38,7 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
         Card(
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.secondary
+                contentColor = MaterialTheme.colorScheme.onSecondary
             ),
             shape = MaterialTheme.shapes.extraSmall,
             modifier = modifier
@@ -81,7 +81,7 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
                         Text(
                             text = "${item.priceInKopecks / 100} ₽",
                             style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.secondary
+                            color = MaterialTheme.colorScheme.onSecondary
                         )
 
                     }
@@ -104,14 +104,14 @@ fun ItemInfo(
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top= 8.dp, bottom = 4.dp),
-            color = MaterialTheme.colorScheme.secondary
+            color = MaterialTheme.colorScheme.onSecondary
 
         )
         Text(
             text = shortDescription,
             style = MaterialTheme.typography.labelMedium,
             modifier = Modifier.padding(bottom = 8.dp),
-            color = MaterialTheme.colorScheme.secondary
+            color = MaterialTheme.colorScheme.onSecondary
         )
     }
 }
