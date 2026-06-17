@@ -4,17 +4,32 @@
     <string name="cat_jeans">Джинсы</string>
     <string name="cat_tshorts">Футболки</string>
     <string name="menu">Меню</string>
+
     <string name="cart">Корзина</string>
     <string name="bin_description">Очистить корзину</string>
     <string name="removeItemOne">Убрать 1 из корзины</string>
     <string name="removeItemAll">Убрать товар из корзины</string>
     <string name="addItem">Добавить ещё 1 в корзину</string>
-    <string name="addToCart">В корзину</string>
+    <string name="addToCart">В корзину · %s ₽</string>
     <string name="cart_empty">Корзина пуста...</string>
+
     <string name="info_button">Больше информации</string>
     <string name="material">Материал:</string>
     <string name="weight">Вес:</string>
     <string name="season">Сезон:</string>
     <string name="country_of_origin">Страна производства:</string>
     <string name="close">Закрыть</string>
+    <string name="choose_size">Выберите размер</string>
+    <string name="size_added">В корзину будет добавлен размер %s</string>
+
+    <string name="tag_new">New</string>
+    <string name="tag_sale">Sale</string>
+    <string name="tag_popular">Popular</string>
+    <string name="tag_exclusive">Exclusive</string>
+
+    <string name="catalog_loading">Загрузка каталога...</string>
+    <string name="err_loading">Ошибка загрузки</string>
+    <string name="repeat">Повторить</string>
+    <string name="check_connection">Проверьте интернет и попробуйте снова</string>
+
 </resources>

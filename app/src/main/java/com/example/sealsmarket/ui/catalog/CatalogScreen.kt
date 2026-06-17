@@ -25,10 +25,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.sealsmarket.R
 import com.example.sealsmarket.data.ProductsData.ExampleProductsContentHandler
 import com.example.sealsmarket.data.ProductsData.interfaces.IProductsContentReciever
 import com.example.sealsmarket.model.Category
@@ -67,7 +69,7 @@ fun Catalog(
                 ) {
                     CircularProgressIndicator()
                     Text(
-                        text = "Загрузка каталога...",
+                        text = stringResource(R.string.catalog_loading),
                         modifier = Modifier.padding(top = 16.dp)
                     )
                 }
@@ -83,16 +85,16 @@ fun Catalog(
                     modifier = Modifier.padding(32.dp)
                 ) {
                     Text(
-                        text = "Ошибка загрузки",
+                        text = stringResource(R.string.err_loading),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.error
                     )
                     Text(
-                        text = "Проверьте интернет и попробуйте снова",
+                        text = stringResource(R.string.check_connection),
                         modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
                     )
                     Button(onClick = { viewModel.loadProducts() }) {
-                        Text("Повторить")
+                        Text(stringResource(R.string.repeat))
                     }
                 }
             }
