@@ -2,19 +2,22 @@ package com.example.sealsmarket.model
 
 //Информация о товаре, добавленном в корзину
 data class CartItem(
+    val id: String,
     val name: String,
-    val color: String,
-    val size: String,
+    val size: Size,
     val imageUrl: String,
-    val priceInRub: Int,
-    val count: Int
+    val priceInKopecks: Int,
+    val count: Int,
+    val color: String = "Цвет", // выбор цвета пока не предусмотрен в тз
 )
 
+
 val emptyCartItem = CartItem(
+    id = "0",
     name = "Футболка современная",
     color = "Чёрный",
-    size = "XXL",
+    size = Size(id="001", name = "XXL"),
     imageUrl = "https://cdn.100sp.ru/pictures/036231728",
-    priceInRub = 4998,
+    priceInKopecks = 4998,
     count = 1
 )

@@ -21,6 +21,8 @@ import com.example.sealsmarket.R
 
 @Composable
 fun CounterButton(
+    onPlusClick: ()->Unit,
+    onMinusClick: ()->Unit,
     count: Int,
     modifier: Modifier = Modifier){
     Row(
@@ -33,7 +35,7 @@ fun CounterButton(
             .height(42.dp)
     ) {
         IconButton(
-            onClick = {}
+            onClick = onMinusClick
         ) {
             Icon(
                 imageVector = Icons.Filled.Remove,
@@ -44,7 +46,7 @@ fun CounterButton(
             text = count.toString()
         )
         IconButton(
-            onClick = {}
+            onClick = onPlusClick
         )
         {
             Icon(
@@ -59,6 +61,6 @@ fun CounterButton(
 @Composable
 fun ButtonPreview(){
     CounterButton(
-        1
+        {},{},1
     )
 }

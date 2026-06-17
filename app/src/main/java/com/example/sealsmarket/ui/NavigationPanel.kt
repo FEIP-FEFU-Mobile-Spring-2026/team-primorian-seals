@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sealsmarket.R
 import com.example.sealsmarket.navigation.Routes
+import com.example.sealsmarket.ui.cart.CartViewModel
 
 @Composable
 fun NavigationPanel(
@@ -38,6 +39,7 @@ fun NavigationPanel(
     onCartNavigate: ()->Unit,
     modifier: Modifier = Modifier,
     curRoute: String? = "") {
+
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = modifier

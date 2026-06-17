@@ -52,17 +52,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.sealsmarket.R
 import com.example.sealsmarket.model.Item
 import com.example.sealsmarket.model.Size
 import com.example.sealsmarket.model.emptyItem
+import com.example.sealsmarket.ui.cart.CartViewModel
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemInfoSheet(
+    cartViewModel: CartViewModel,
     item: Item,
     onClose: () -> Unit,
     modifier: Modifier = Modifier
@@ -258,6 +261,9 @@ fun ItemInfoSheet(
                         message,
                         Toast.LENGTH_SHORT
                     ).show()
+
+                    cartViewModel.addItem(item, selectedSize)
+
                     scope.launch {
                         sheetState.hide()
                     }.invokeOnCompletion {
@@ -353,6 +359,7 @@ fun TagText(text: String, modifier: Modifier = Modifier) {
 fun ItemInfoSheetPreview() {
     SealsMarketTheme {
         ItemInfoSheet(
+            viewModel(),
             item = emptyItem,
             onClose = {}
         )

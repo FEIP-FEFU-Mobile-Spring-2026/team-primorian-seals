@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -22,6 +23,7 @@ import com.example.sealsmarket.navigation.Routes
 import com.example.sealsmarket.ui.NavigationPanel
 import com.example.sealsmarket.ui.cart.Cart
 import com.example.sealsmarket.ui.cart.CartTopBar
+import com.example.sealsmarket.ui.cart.CartViewModel
 import com.example.sealsmarket.ui.catalog.Catalog
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
@@ -41,14 +43,14 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         val navBackStackEntry = navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry.value?.destination?.route
-
+        val cartViewModel: CartViewModel = viewModel()
         // Используем API для загрузки данных каталога
         val apiProductsContentHandler = ApiProductsContentHandler()
 
         Scaffold(
             topBar = {
                 when (currentRoute) {
-                    Routes.CART -> { CartTopBar() }
+                    Routes.CART -> { CartTopBar({cartViewModel.clearCart()}) }
                     Routes.CATALOG -> {
                     }
                 }
@@ -66,21 +68,22 @@ class MainActivity : ComponentActivity() {
 
         ) {
             innerPadding ->
-
             NavHost(navController, startDestination = Routes.CATALOG)
             {
                 composable(Routes.CATALOG)
                 {
                     Catalog(
+                        cartViewModel = cartViewModel,
                         productsContentHandler = apiProductsContentHandler,
-                        modifier = modifier
+                        modifier = Modifier
                             .padding((innerPadding))
                     )
                 }
                 composable(Routes.CART)
                 {
                     Cart(
-                        modifier = modifier
+                        cartViewModel = cartViewModel,
+                        modifier = Modifier
                             .padding((innerPadding))
                     )
                 }

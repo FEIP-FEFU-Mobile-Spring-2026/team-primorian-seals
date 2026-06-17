@@ -37,11 +37,13 @@ import com.example.sealsmarket.model.Category
 import com.example.sealsmarket.model.Item
 import com.example.sealsmarket.model.emptyItem
 import com.example.sealsmarket.ui.NavigationPanel
+import com.example.sealsmarket.ui.cart.CartViewModel
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
 
 @Composable
 fun Catalog(
+    cartViewModel: CartViewModel,
     productsContentHandler: IProductsContentReciever,
     modifier: Modifier = Modifier
 ) {
@@ -123,6 +125,7 @@ fun Catalog(
     
     selectedItem?.let {
         ItemInfoSheet(
+            cartViewModel,
             item = it,
             onClose = { selectedItem = null }
         )
@@ -234,6 +237,7 @@ fun CatalogPreview()
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
             Catalog(
+                viewModel() ,
                 productsContentHandler = ExampleProductsContentHandler,
                 modifier = Modifier.padding(innerPadding)
             )
