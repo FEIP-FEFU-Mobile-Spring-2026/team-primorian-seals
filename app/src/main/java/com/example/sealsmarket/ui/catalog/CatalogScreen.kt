@@ -233,7 +233,7 @@ fun CatalogPreview()
 {
     SealsMarketTheme {
         Scaffold(
-            bottomBar = { NavigationPanel({ }, { }) },
+            bottomBar = { NavigationPanel({ }, { }, 0) },
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
             Catalog(

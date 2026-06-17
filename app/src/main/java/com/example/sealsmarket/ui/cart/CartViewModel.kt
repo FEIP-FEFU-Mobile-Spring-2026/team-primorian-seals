@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.sealsmarket.model.CartItem
 import com.example.sealsmarket.model.Item
 import com.example.sealsmarket.model.Size
+import com.example.sealsmarket.model.cat_new
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +20,8 @@ class CartViewModel: ViewModel() {
             var item_id = "${item.id}_${size.name}"
             val index = newList.indexOfFirst { it.id == item_id }
             var newItem: CartItem
+            val newPrice = curState.totalPrice + item.priceInKopecks
+            val newCnt = curState.itemsCnt + 1
 
             if (index == -1) {
                 newItem = CartItem(item_id, item.name, size, item.imageUrl, item.priceInKopecks, 1)
@@ -28,7 +31,7 @@ class CartViewModel: ViewModel() {
                 var old_cnt = newList[index].count;
                 newList[index] = newList[index].copy(count = old_cnt+1);
             }
-            curState.copy(items = newList);
+            curState.copy(items = newList, totalPrice = newPrice, itemsCnt = newCnt);
         }
     }
 
@@ -40,7 +43,9 @@ class CartViewModel: ViewModel() {
             var old_cnt = newList[index].count;
 
             newList[index] = newList[index].copy(count = old_cnt+1);
-            curState.copy(items = newList);
+            val newPrice = curState.totalPrice + cartItem.priceInKopecks
+            val newCnt = curState.itemsCnt + 1
+            curState.copy(items = newList, totalPrice = newPrice, itemsCnt = newCnt);
         }
     }
 
@@ -61,13 +66,16 @@ class CartViewModel: ViewModel() {
             else{
                 newList[index] = newList[index].copy(count = oldCnt-cnt);
             }
-            curState.copy(items = newList)
+
+            val newPrice = curState.totalPrice - cartItem.priceInKopecks*cnt
+            val newCnt = curState.itemsCnt - cnt
+            curState.copy(items = newList, totalPrice = newPrice, itemsCnt = newCnt )
         }
     }
 
     fun clearCart(){
         _state.update { curState->
-            curState.copy(items=emptyList())
+            curState.copy(items=emptyList(), itemsCnt = 0, totalPrice = 0)
         }
     }
 }

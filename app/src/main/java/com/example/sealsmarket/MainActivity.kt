@@ -26,6 +26,7 @@ import com.example.sealsmarket.ui.cart.CartTopBar
 import com.example.sealsmarket.ui.cart.CartViewModel
 import com.example.sealsmarket.ui.catalog.Catalog
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
+import androidx.compose.runtime.collectAsState
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +51,9 @@ class MainActivity : ComponentActivity() {
         Scaffold(
             topBar = {
                 when (currentRoute) {
-                    Routes.CART -> { CartTopBar({cartViewModel.clearCart()}) }
+                    Routes.CART -> { CartTopBar({
+                        cartViewModel.clearCart()
+                    }) }
                     Routes.CATALOG -> {
                     }
                 }
@@ -60,7 +63,8 @@ class MainActivity : ComponentActivity() {
                 NavigationPanel(
                     onCatalogNavigate = { navController.navigate(Routes.CATALOG){launchSingleTop=true} },
                     onCartNavigate = { navController.navigate(Routes.CART){launchSingleTop=true} },
-                    curRoute = currentRoute
+                    curRoute = currentRoute,
+                    cartItemsCnt = cartViewModel.state.collectAsState().value.itemsCnt
                 )
             },
 

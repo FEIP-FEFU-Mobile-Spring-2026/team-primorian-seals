@@ -39,11 +39,13 @@ fun CounterButton(
         ) {
             Icon(
                 imageVector = Icons.Filled.Remove,
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 contentDescription = stringResource(R.string.removeItemOne)
             )
         }
         Text(
-            text = count.toString()
+            text = count.toString(),
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
         IconButton(
             onClick = onPlusClick
@@ -51,6 +53,7 @@ fun CounterButton(
         {
             Icon(
                 imageVector = Icons.Filled.Add,
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 contentDescription = stringResource(R.string.addItem),
             )
         }

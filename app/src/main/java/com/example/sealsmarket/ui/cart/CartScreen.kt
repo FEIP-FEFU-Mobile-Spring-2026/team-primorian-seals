@@ -4,15 +4,19 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +38,7 @@ import com.example.sealsmarket.R
 import com.example.sealsmarket.ui.NavigationPanel
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.draw.clip
 import com.example.sealsmarket.model.CartItem
 
 @Composable
@@ -44,13 +49,46 @@ import com.example.sealsmarket.model.CartItem
         if(cartState.items.count() == 0) {
             CartContentEmpty(modifier)
         }
-    else{
-            CartContent(cartState.items, cartViewModel=cartViewModel, modifier)
+    else {
+            Column(
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = modifier.fillMaxSize()) {
+                CartContent(
+                    cartState.items,
+                    cartViewModel = cartViewModel)
+                CartBottomPanel(
+                    cartState.totalPrice,
+                    Modifier
+                        .fillMaxWidth())
+            }
         }
     }
 
     @Composable
-    fun CartTopBar(onCartClear: ()->Unit, modifier: Modifier = Modifier){
+    fun CartBottomPanel(totalPrice: Int, modifier: Modifier = Modifier){
+        Column(
+            modifier = modifier,
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text=stringResource(R.string.cart_total))
+                Text(text = "${totalPrice/100} ₽")
+            }
+            Button(onClick = {},
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .height(60.dp)
+                    .clip(MaterialTheme.shapes.extraSmall)
+                    ) {
+                Text(text = stringResource(R.string.cart_done))
+            }
+        }
+    }
+    @Composable
+    fun CartTopBar(onClearClick: ()->Unit, modifier: Modifier = Modifier){
         Box(
             modifier = modifier
                 .fillMaxWidth()
@@ -64,7 +102,7 @@ import com.example.sealsmarket.model.CartItem
                 modifier = Modifier.align(Alignment.Center)
             )
             IconButton(
-                onClick = onCartClear,
+                onClick = onClearClick,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
             ) {
@@ -80,13 +118,16 @@ import com.example.sealsmarket.model.CartItem
 
     @Composable
     fun CartContent(itemList: List<CartItem>, cartViewModel: CartViewModel, modifier: Modifier = Modifier){
-        LazyColumn() {
+        LazyColumn(
+            modifier = modifier.padding(horizontal = 4.dp)) {
             items(itemList){
                 item -> CardContent(
                 item,
                 onItemDecrement = {cartViewModel.removeItem(item)},
                 onItemIncrement = {cartViewModel.addItem(item)},
-                onItemRemove = {cartViewModel.removeItem(item, item.count)})
+                onItemRemove = {cartViewModel.removeItem(item, item.count)},
+                modifier = Modifier.padding(vertical = 4.dp)
+                )
             }
         }
     }
@@ -123,7 +164,7 @@ import com.example.sealsmarket.model.CartItem
         SealsMarketTheme() {
             Scaffold(
                 topBar = {CartTopBar({})},
-                bottomBar = { NavigationPanel({},{}) }
+                bottomBar = { NavigationPanel({},{}, 0) }
             ){innerPadding->
                 Cart(
                     cartViewModel = viewModel(),
