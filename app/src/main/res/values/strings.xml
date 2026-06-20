@@ -34,4 +34,11 @@
 
     <string name="cart_total">Итого</string>
     <string name="cart_done">Перейти к оформлению</string>
+    <string name="clear_cart_title">Очистить корзину</string>
+    <string name="clear_cart_message">Вы уверены, что хотите очистить корзину?</string>
+    <string name="clear_cart_cancel">Отмена</string>
+    <string name="clear_cart_confirm">Очистить</string>
+    <string name="order_success_title">Заказ оформлен</string>
+    <string name="order_success_message">Спасибо за покупку!</string>
+    <string name="order_success_ok">OK</string>
 </resources>

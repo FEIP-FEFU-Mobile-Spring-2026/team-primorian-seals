@@ -11,18 +11,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -44,8 +49,47 @@ import com.example.sealsmarket.model.CartItem
 @Composable
     fun Cart(
         cartViewModel: CartViewModel,
-        modifier: Modifier = Modifier){
+        modifier: Modifier = Modifier,
+        catalogItems: List<com.example.sealsmarket.model.Item> = emptyList()
+    ){
         val cartState = cartViewModel.state.collectAsState().value
+        var showClearDialog by remember { mutableStateOf(false) }
+        var showSuccessDialog by remember { mutableStateOf(false) }
+
+        if (showClearDialog) {
+            AlertDialog(
+                onDismissRequest = { showClearDialog = false },
+                title = { Text(text = stringResource(R.string.clear_cart_title)) },
+                text = { Text(text = stringResource(R.string.clear_cart_message)) },
+                confirmButton = {
+                    TextButton(onClick = {
+                        cartViewModel.clearCart()
+                        showClearDialog = false
+                    }) {
+                        Text(text = stringResource(R.string.clear_cart_confirm))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showClearDialog = false }) {
+                        Text(text = stringResource(R.string.clear_cart_cancel))
+                    }
+                }
+            )
+        }
+
+        if (showSuccessDialog) {
+            AlertDialog(
+                onDismissRequest = { showSuccessDialog = false },
+                title = { Text(text = stringResource(R.string.order_success_title)) },
+                text = { Text(text = stringResource(R.string.order_success_message)) },
+                confirmButton = {
+                    TextButton(onClick = { showSuccessDialog = false }) {
+                        Text(text = stringResource(R.string.order_success_ok))
+                    }
+                }
+            )
+        }
+
         if(cartState.items.count() == 0) {
             CartContentEmpty(modifier)
         }
@@ -58,6 +102,8 @@ import com.example.sealsmarket.model.CartItem
                     cartViewModel = cartViewModel)
                 CartBottomPanel(
                     cartState.totalPrice,
+                    cartViewModel = cartViewModel,
+                    onCheckout = { showSuccessDialog = true },
                     Modifier
                         .fillMaxWidth())
             }
@@ -65,7 +111,7 @@ import com.example.sealsmarket.model.CartItem
     }
 
     @Composable
-    fun CartBottomPanel(totalPrice: Int, modifier: Modifier = Modifier){
+    fun CartBottomPanel(totalPrice: Int, cartViewModel: CartViewModel, onCheckout: () -> Unit, modifier: Modifier = Modifier){
         Column(
             modifier = modifier,
             horizontalAlignment = Alignment.CenterHorizontally) {
@@ -76,7 +122,10 @@ import com.example.sealsmarket.model.CartItem
                 Text(text=stringResource(R.string.cart_total))
                 Text(text = "${totalPrice/100} ₽")
             }
-            Button(onClick = {},
+            Button(onClick = {
+                cartViewModel.placeOrder()
+                onCheckout()
+            },
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()

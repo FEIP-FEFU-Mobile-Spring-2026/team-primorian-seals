@@ -19,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,7 +46,8 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
 fun Catalog(
     cartViewModel: CartViewModel,
     productsContentHandler: IProductsContentReciever,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onCatalogLoaded: (List<Item>) -> Unit = {}
 ) {
     val viewModel: CatalogViewModel = viewModel(
         factory = CatalogViewModelFactory(productsContentHandler)
@@ -54,6 +56,12 @@ fun Catalog(
     val selectedCatId by viewModel.selectedCatId.collectAsState()
 
     var selectedItem by remember { mutableStateOf<Item?>(null) }
+
+    LaunchedEffect(loadingState) {
+        if (loadingState == 1) {
+            onCatalogLoaded(viewModel.productsContent.value?.items ?: emptyList())
+        }
+    }
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,

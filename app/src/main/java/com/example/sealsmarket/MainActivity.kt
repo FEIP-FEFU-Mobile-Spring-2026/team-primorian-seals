@@ -10,6 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -27,6 +31,8 @@ import com.example.sealsmarket.ui.cart.CartViewModel
 import com.example.sealsmarket.ui.catalog.Catalog
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
+import com.example.sealsmarket.model.Item
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,14 +51,23 @@ class MainActivity : ComponentActivity() {
         val navBackStackEntry = navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry.value?.destination?.route
         val cartViewModel: CartViewModel = viewModel()
+        cartViewModel.initPrefs(context)
         // Используем API для загрузки данных каталога
         val apiProductsContentHandler = ApiProductsContentHandler()
+
+        var catalogItems by remember { mutableStateOf<List<Item>>(emptyList()) }
+
+        LaunchedEffect(currentRoute) {
+            if (currentRoute == Routes.CATALOG) {
+                catalogItems = emptyList()
+            }
+        }
 
         Scaffold(
             topBar = {
                 when (currentRoute) {
                     Routes.CART -> { CartTopBar({
-                        cartViewModel.clearCart()
+                        // dialog handled in Cart screen
                     }) }
                     Routes.CATALOG -> {
                     }
@@ -80,7 +95,11 @@ class MainActivity : ComponentActivity() {
                         cartViewModel = cartViewModel,
                         productsContentHandler = apiProductsContentHandler,
                         modifier = Modifier
-                            .padding((innerPadding))
+                            .padding((innerPadding)),
+                        onCatalogLoaded = { items ->
+                            catalogItems = items
+                            cartViewModel.restoreCart(items)
+                        }
                     )
                 }
                 composable(Routes.CART)
@@ -88,7 +107,8 @@ class MainActivity : ComponentActivity() {
                     Cart(
                         cartViewModel = cartViewModel,
                         modifier = Modifier
-                            .padding((innerPadding))
+                            .padding((innerPadding)),
+                        catalogItems = catalogItems
                     )
                 }
 
