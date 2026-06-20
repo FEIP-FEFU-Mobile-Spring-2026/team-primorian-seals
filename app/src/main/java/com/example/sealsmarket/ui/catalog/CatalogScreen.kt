@@ -245,7 +245,7 @@ fun CatalogPreview()
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
             Catalog(
-                viewModel() ,
+                cartViewModel = viewModel(),
                 productsContentHandler = ExampleProductsContentHandler,
                 modifier = Modifier.padding(innerPadding)
             )
