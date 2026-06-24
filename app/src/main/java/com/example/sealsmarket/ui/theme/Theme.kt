@@ -13,11 +13,11 @@ import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
     primary = Dark80,
-    secondary = PurpleGrey80,
+    secondary = TagBlue80,
     tertiary = Pink80,
     surface = DarkBlue80,
     onSurface = CoolBlue80,
-    onSecondary = TagBlue80,
+    onSecondary = PurpleGrey80,
     onPrimary =CartAndTagText
 
 
@@ -25,11 +25,11 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = White40,
-    secondary = PurpleGrey40,
+    secondary = TagBlue80,
     tertiary = Pink40,
     surface = LightBlue40,
     onSurface = GreatBlue40,
-    onSecondary = TagBlue80,
+    onSecondary = PurpleGrey40,
     onPrimary =CartAndTagText
 
 

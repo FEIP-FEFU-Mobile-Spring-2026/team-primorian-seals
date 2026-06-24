@@ -29,6 +29,15 @@ val Typography = Typography(
         lineHeight = 20.sp,
         letterSpacing = 0.5.sp
     ),
+
+    bodyMedium = TextStyle(
+        fontFamily = ptsans,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.5.sp
+    ),
+
     labelLarge = TextStyle(
         fontFamily = montserrat,
         fontWeight = FontWeight.Normal,
