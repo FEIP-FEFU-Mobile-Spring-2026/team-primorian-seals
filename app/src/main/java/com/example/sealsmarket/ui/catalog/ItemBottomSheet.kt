@@ -52,17 +52,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.sealsmarket.R
 import com.example.sealsmarket.model.Item
 import com.example.sealsmarket.model.Size
 import com.example.sealsmarket.model.emptyItem
+import com.example.sealsmarket.ui.cart.CartViewModel
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemInfoSheet(
+    cartViewModel: CartViewModel,
     item: Item,
     onClose: () -> Unit,
     modifier: Modifier = Modifier
@@ -142,7 +145,7 @@ fun ItemInfoSheet(
                             text = "${item.priceInKopecks / 100} ₽",
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = MaterialTheme.colorScheme.onSecondary,
                             modifier = Modifier.padding(start = 12.dp)
                         )
                     }
@@ -185,7 +188,7 @@ fun ItemInfoSheet(
                     ) {
                         Column {
                             Text(
-                                text = "Материал",
+                                text = stringResource(R.string.material),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -200,7 +203,7 @@ fun ItemInfoSheet(
                             horizontalAlignment = Alignment.End
                         ) {
                             Text(
-                                text = "Страна",
+                                text = stringResource(R.string.country_of_origin),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -227,7 +230,7 @@ fun ItemInfoSheet(
 
                     // Размеры
                     Text(
-                        text = "Выберите размер",
+                        text = stringResource(R.string.choose_size),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -252,11 +255,15 @@ fun ItemInfoSheet(
             // Кнопка добавления в корзину внизу
             Button(
                 onClick = {
+                    val message = context.getString(R.string.size_added, selectedSize.name)
                     Toast.makeText(
                         context,
-                        "В корзину будет добавлен размер ${selectedSize.name}",
+                        message,
                         Toast.LENGTH_SHORT
                     ).show()
+
+                    cartViewModel.addItem(item, selectedSize)
+
                     scope.launch {
                         sheetState.hide()
                     }.invokeOnCompletion {
@@ -275,10 +282,12 @@ fun ItemInfoSheet(
                     .padding(horizontal = 20.dp)
                     .padding(bottom = 16.dp)
                     .height(56.dp)
+                    .align(Alignment.BottomCenter)
+
             ) {
                 Text(
-                    text = "В корзину · ${item.priceInKopecks / 100} ₽",
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    text = stringResource(R.string.addToCart, item.priceInKopecks / 100 ),
+                    color = MaterialTheme.colorScheme.onSecondary,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
@@ -324,17 +333,17 @@ fun TagText(text: String, modifier: Modifier = Modifier) {
     Surface(
         shape = MaterialTheme.shapes.small,
         color = when (text) {
-            "New" -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f)
-            "Sale" -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.8f)
-            "Popular" -> MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.8f)
-            "Exclusive" -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f)
+            stringResource(R.string.tag_new) -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f)
+            stringResource(R.string.tag_sale) -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.8f)
+            stringResource(R.string.tag_popular) -> MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.8f)
+            stringResource(R.string.tag_exclusive) -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f)
             else -> MaterialTheme.colorScheme.surfaceVariant
         },
         contentColor = when (text) {
-            "New" -> MaterialTheme.colorScheme.onPrimaryContainer
-            "Sale" -> MaterialTheme.colorScheme.onErrorContainer
-            "Popular" -> MaterialTheme.colorScheme.onTertiaryContainer
-            "Exclusive" -> MaterialTheme.colorScheme.onSecondaryContainer
+            stringResource(R.string.tag_new) -> MaterialTheme.colorScheme.onPrimaryContainer
+            stringResource(R.string.tag_sale) -> MaterialTheme.colorScheme.onErrorContainer
+            stringResource(R.string.tag_popular) -> MaterialTheme.colorScheme.onTertiaryContainer
+            stringResource(R.string.tag_exclusive) -> MaterialTheme.colorScheme.onSecondaryContainer
             else -> MaterialTheme.colorScheme.onSurfaceVariant
         },
         modifier = modifier
@@ -352,6 +361,7 @@ fun TagText(text: String, modifier: Modifier = Modifier) {
 fun ItemInfoSheetPreview() {
     SealsMarketTheme {
         ItemInfoSheet(
+            viewModel(),
             item = emptyItem,
             onClose = {}
         )

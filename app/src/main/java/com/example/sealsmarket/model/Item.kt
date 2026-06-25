@@ -13,7 +13,7 @@ data class Item(
     val material: String,
     val weight: String,
     val season: String,
-    val countryOfOrigin: String
+    val countryOfOrigin: String,
 )
 
 data class Size(

@@ -19,29 +19,35 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.sealsmarket.R
 import com.example.sealsmarket.data.ProductsData.ExampleProductsContentHandler
 import com.example.sealsmarket.data.ProductsData.interfaces.IProductsContentReciever
 import com.example.sealsmarket.model.Category
 import com.example.sealsmarket.model.Item
 import com.example.sealsmarket.model.emptyItem
 import com.example.sealsmarket.ui.NavigationPanel
+import com.example.sealsmarket.ui.cart.CartViewModel
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
 
 
 @Composable
 fun Catalog(
+    cartViewModel: CartViewModel,
     productsContentHandler: IProductsContentReciever,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onCatalogLoaded: (List<Item>) -> Unit = {}
 ) {
     val viewModel: CatalogViewModel = viewModel(
         factory = CatalogViewModelFactory(productsContentHandler)
@@ -50,6 +56,12 @@ fun Catalog(
     val selectedCatId by viewModel.selectedCatId.collectAsState()
 
     var selectedItem by remember { mutableStateOf<Item?>(null) }
+
+    LaunchedEffect(loadingState) {
+        if (loadingState == 1) {
+            onCatalogLoaded(viewModel.productsContent.value?.items ?: emptyList())
+        }
+    }
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -67,7 +79,7 @@ fun Catalog(
                 ) {
                     CircularProgressIndicator()
                     Text(
-                        text = "Загрузка каталога...",
+                        text = stringResource(R.string.catalog_loading),
                         modifier = Modifier.padding(top = 16.dp)
                     )
                 }
@@ -83,16 +95,16 @@ fun Catalog(
                     modifier = Modifier.padding(32.dp)
                 ) {
                     Text(
-                        text = "Ошибка загрузки",
+                        text = stringResource(R.string.err_loading),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.error
                     )
                     Text(
-                        text = "Проверьте интернет и попробуйте снова",
+                        text = stringResource(R.string.check_connection),
                         modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
                     )
                     Button(onClick = { viewModel.loadProducts() }) {
-                        Text("Повторить")
+                        Text(stringResource(R.string.repeat))
                     }
                 }
             }
@@ -121,6 +133,7 @@ fun Catalog(
     
     selectedItem?.let {
         ItemInfoSheet(
+            cartViewModel,
             item = it,
             onClose = { selectedItem = null }
         )
@@ -228,10 +241,11 @@ fun CatalogPreview()
 {
     SealsMarketTheme {
         Scaffold(
-            bottomBar = { NavigationPanel({ }, { }) },
+            bottomBar = { NavigationPanel({ }, { }, 0) },
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
             Catalog(
+                cartViewModel = viewModel(),
                 productsContentHandler = ExampleProductsContentHandler,
                 modifier = Modifier.padding(innerPadding)
             )
