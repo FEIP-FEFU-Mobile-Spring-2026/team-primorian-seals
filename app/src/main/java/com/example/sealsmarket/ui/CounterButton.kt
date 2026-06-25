@@ -21,6 +21,8 @@ import com.example.sealsmarket.R
 
 @Composable
 fun CounterButton(
+    onPlusClick: ()->Unit,
+    onMinusClick: ()->Unit,
     count: Int,
     modifier: Modifier = Modifier){
     Row(
@@ -33,22 +35,25 @@ fun CounterButton(
             .height(42.dp)
     ) {
         IconButton(
-            onClick = {}
+            onClick = onMinusClick
         ) {
             Icon(
                 imageVector = Icons.Filled.Remove,
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 contentDescription = stringResource(R.string.removeItemOne)
             )
         }
         Text(
-            text = count.toString()
+            text = count.toString(),
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
         IconButton(
-            onClick = {}
+            onClick = onPlusClick
         )
         {
             Icon(
                 imageVector = Icons.Filled.Add,
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 contentDescription = stringResource(R.string.addItem),
             )
         }
@@ -59,6 +64,6 @@ fun CounterButton(
 @Composable
 fun ButtonPreview(){
     CounterButton(
-        1
+        {},{},1
     )
 }

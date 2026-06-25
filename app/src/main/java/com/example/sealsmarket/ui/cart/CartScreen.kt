@@ -1,30 +1,35 @@
 package com.example.sealsmarket.ui.cart
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.windowInsetsTopHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,19 +38,109 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sealsmarket.R
 import com.example.sealsmarket.ui.NavigationPanel
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.draw.clip
+import com.example.sealsmarket.model.CartItem
 
     @Composable
-    fun Cart(modifier: Modifier = Modifier){
-        //Если корзина не пустая, выводить список товаров, используя CartItemCard.kt ,
-        //итоговую стоимость и кнопку оформления заказа
-        ContentEmpty()
+    fun Cart(
+        cartViewModel: CartViewModel,
+        modifier: Modifier = Modifier,
+        catalogItems: List<com.example.sealsmarket.model.Item> = emptyList()
+    ){
+        val cartState = cartViewModel.state.collectAsState().value
+        var showClearDialog by remember { mutableStateOf(false) }
+        var showSuccessDialog by remember { mutableStateOf(false) }
+
+        if (showClearDialog) {
+            AlertDialog(
+                onDismissRequest = { showClearDialog = false },
+                title = { Text(text = stringResource(R.string.clear_cart_title)) },
+                text = { Text(text = stringResource(R.string.clear_cart_message)) },
+                confirmButton = {
+                    TextButton(onClick = {
+                        cartViewModel.clearCart()
+                        showClearDialog = false
+                    }) {
+                        Text(text = stringResource(R.string.clear_cart_confirm))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showClearDialog = false }) {
+                        Text(text = stringResource(R.string.clear_cart_cancel))
+                    }
+                }
+            )
+        }
+
+        if (showSuccessDialog) {
+            AlertDialog(
+                onDismissRequest = { showSuccessDialog = false },
+                title = { Text(text = stringResource(R.string.order_success_title)) },
+                text = { Text(text = stringResource(R.string.order_success_message)) },
+                confirmButton = {
+                    TextButton(onClick = { showSuccessDialog = false }) {
+                        Text(text = stringResource(R.string.order_success_ok))
+                    }
+                }
+            )
+        }
+
+        if(cartState.items.isEmpty()) {
+            CartContentEmpty(modifier)
+        }
+        else {
+            Column(
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = modifier.fillMaxSize()) {
+                Column(modifier = Modifier.weight(1f)) {
+                    CartTopBar(onClearClick = { showClearDialog = true })
+                    CartContent(
+                        cartState.items,
+                        cartViewModel = cartViewModel)
+                }
+                CartBottomPanel(
+                    cartState.totalPrice,
+                    cartViewModel = cartViewModel,
+                    onCheckout = { showSuccessDialog = true },
+                    Modifier
+                        .fillMaxWidth())
+            }
+        }
     }
 
     @Composable
-    fun CartTopBar(modifier: Modifier = Modifier){
+    fun CartBottomPanel(totalPrice: Int, cartViewModel: CartViewModel, onCheckout: () -> Unit, modifier: Modifier = Modifier){
+        Column(
+            modifier = modifier,
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text=stringResource(R.string.cart_total))
+                Text(text = "${totalPrice/100} ₽")
+            }
+            Button(onClick = {
+                cartViewModel.placeOrder()
+                onCheckout()
+            },
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .height(60.dp)
+                    .clip(MaterialTheme.shapes.extraSmall)
+                    ) {
+                Text(text = stringResource(R.string.cart_done))
+            }
+        }
+    }
+    @Composable
+    fun CartTopBar(onClearClick: ()->Unit, modifier: Modifier = Modifier){
         Box(
             modifier = modifier
                 .fillMaxWidth()
@@ -59,7 +154,7 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
                 modifier = Modifier.align(Alignment.Center)
             )
             IconButton(
-                onClick = {/*Очистка корзины*/ },
+                onClick = onClearClick,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
             ) {
@@ -72,8 +167,25 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
         }
     }
 
+
     @Composable
-    fun ContentEmpty(modifier:Modifier = Modifier){
+    fun CartContent(itemList: List<CartItem>, cartViewModel: CartViewModel, modifier: Modifier = Modifier){
+        LazyColumn(
+            modifier = modifier.padding(horizontal = 4.dp)) {
+            items(itemList){
+                item -> CardContent(
+                item,
+                onItemDecrement = {cartViewModel.removeItem(item)},
+                onItemIncrement = {cartViewModel.addItem(item)},
+                onItemRemove = {cartViewModel.removeItem(item, item.count)},
+                modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
+        }
+    }
+
+    @Composable
+    fun CartContentEmpty(modifier:Modifier = Modifier){
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -103,10 +215,12 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
     fun CartPreview(){
         SealsMarketTheme() {
             Scaffold(
-                topBar = {CartTopBar()},
-                bottomBar = { NavigationPanel({},{}) }
+                topBar = {CartTopBar({})},
+                bottomBar = { NavigationPanel({},{}, 0) }
             ){innerPadding->
-                Cart(modifier = Modifier.padding(innerPadding))
+                Cart(
+                    cartViewModel = viewModel(),
+                    modifier = Modifier.padding(innerPadding))
             }
         }
     }

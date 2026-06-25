@@ -38,6 +38,9 @@ import com.example.sealsmarket.ui.theme.SealsMarketTheme
 @Composable
 fun CardContent(
     item: CartItem,
+    onItemIncrement: ()->Unit,
+    onItemDecrement: ()->Unit,
+    onItemRemove: ()->Unit,
     modifier: Modifier = Modifier.fillMaxWidth(),
     placeHolder: Painter = painterResource(R.drawable.empty),
 ) {
@@ -52,7 +55,7 @@ fun CardContent(
         Box()
         {
             IconButton(
-                onClick = {/*Удалить товар из корзины*/ },
+                onClick = onItemRemove,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(end = 8.dp, top = 8.dp)
@@ -92,7 +95,7 @@ fun CardContent(
 
                     ItemInfo(
                         item.name,
-                        item.size,
+                        item.size.name,
                         item.color
                     )
 
@@ -104,9 +107,10 @@ fun CardContent(
 
                     ) {
                         Text(
-                            text = "${item.priceInRub.toString()} ₽"
+                            text = "${(item.priceInKopecks * item.count / 100)} ₽"
                         )
-                        CounterButton(
+                        CounterButton(onItemIncrement,
+                            onItemDecrement,
                             item.count
                         )
                     }
@@ -149,7 +153,8 @@ fun ItemInfo(
 fun CardPreview(){
     SealsMarketTheme() {
         CardContent(
-            item = emptyCartItem
+            item = emptyCartItem,
+            {},{},{}
         )
     }
 }
