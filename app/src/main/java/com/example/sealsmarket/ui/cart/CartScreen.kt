@@ -46,7 +46,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.draw.clip
 import com.example.sealsmarket.model.CartItem
 
-@Composable
+    @Composable
     fun Cart(
         cartViewModel: CartViewModel,
         modifier: Modifier = Modifier,
@@ -90,16 +90,19 @@ import com.example.sealsmarket.model.CartItem
             )
         }
 
-        if(cartState.items.count() == 0) {
+        if(cartState.items.isEmpty()) {
             CartContentEmpty(modifier)
         }
-    else {
+        else {
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
                 modifier = modifier.fillMaxSize()) {
-                CartContent(
-                    cartState.items,
-                    cartViewModel = cartViewModel)
+                Column(modifier = Modifier.weight(1f)) {
+                    CartTopBar(onClearClick = { showClearDialog = true })
+                    CartContent(
+                        cartState.items,
+                        cartViewModel = cartViewModel)
+                }
                 CartBottomPanel(
                     cartState.totalPrice,
                     cartViewModel = cartViewModel,

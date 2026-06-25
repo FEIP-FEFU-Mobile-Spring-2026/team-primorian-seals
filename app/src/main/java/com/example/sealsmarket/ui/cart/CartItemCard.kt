@@ -107,7 +107,7 @@ fun CardContent(
 
                     ) {
                         Text(
-                            text = "${(item.priceInKopecks/100).toString()} ₽"
+                            text = "${(item.priceInKopecks * item.count / 100)} ₽"
                         )
                         CounterButton(onItemIncrement,
                             onItemDecrement,
