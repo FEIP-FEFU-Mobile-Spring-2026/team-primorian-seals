@@ -145,7 +145,7 @@ fun ItemInfoSheet(
                             text = "${item.priceInKopecks / 100} ₽",
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = MaterialTheme.colorScheme.onSecondary,
                             modifier = Modifier.padding(start = 12.dp)
                         )
                     }
@@ -282,10 +282,12 @@ fun ItemInfoSheet(
                     .padding(horizontal = 20.dp)
                     .padding(bottom = 16.dp)
                     .height(56.dp)
+                    .align(Alignment.BottomCenter)
+
             ) {
                 Text(
                     text = stringResource(R.string.addToCart, item.priceInKopecks / 100 ),
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = MaterialTheme.colorScheme.onSecondary,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
