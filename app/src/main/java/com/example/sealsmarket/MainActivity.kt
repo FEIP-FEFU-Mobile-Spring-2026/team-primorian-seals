@@ -26,7 +26,6 @@ import com.example.sealsmarket.data.ProductsData.ExampleProductsContentHandler
 import com.example.sealsmarket.navigation.Routes
 import com.example.sealsmarket.ui.NavigationPanel
 import com.example.sealsmarket.ui.cart.Cart
-import com.example.sealsmarket.ui.cart.CartTopBar
 import com.example.sealsmarket.ui.cart.CartViewModel
 import com.example.sealsmarket.ui.catalog.Catalog
 import com.example.sealsmarket.ui.theme.SealsMarketTheme
@@ -66,11 +65,7 @@ class MainActivity : ComponentActivity() {
         Scaffold(
             topBar = {
                 when (currentRoute) {
-                    Routes.CART -> { CartTopBar({
-                        // dialog handled in Cart screen
-                    }) }
-                    Routes.CATALOG -> {
-                    }
+                    Routes.CATALOG -> {}
                 }
             },
 
